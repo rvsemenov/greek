@@ -1,5 +1,8 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import Fastify, { type FastifyReply, type FastifyRequest } from "fastify";
 import cookie from "@fastify/cookie";
+import fastifyStatic from "@fastify/static";
 import { config } from "./config.js";
 import { getRule, listRules, listTests, itemIndex } from "./content.js";
 import { listProgress, review } from "./srs.js";
@@ -30,6 +33,14 @@ export function buildApp() {
   app.register(cookie, { secret: config.sessionSecret });
 
   app.decorateRequest("user", undefined);
+
+  if (existsSync(join(config.webDist, "index.html"))) {
+    app.register(fastifyStatic, { root: config.webDist, wildcard: false });
+    app.setNotFoundHandler((req, reply) => {
+      if (req.method === "GET" && !req.url.startsWith("/api/")) return reply.sendFile("index.html");
+      return reply.code(404).send({ error: "не найдено" });
+    });
+  }
 
   async function requireUser(req: FastifyRequest, reply: FastifyReply) {
     const raw = req.cookies[COOKIE];
