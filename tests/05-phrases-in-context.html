@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Фразы и выражения из таблицы</title>
+<style>
+  :root {
+    --accent: #2563eb;
+    --accent-soft: #dbeafe;
+    --ok: #16a34a;
+    --ok-soft: #dcfce7;
+    --bad: #dc2626;
+    --bad-soft: #fee2e2;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --bg: #f3f4f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --accent: #60a5fa;
+      --accent-soft: #1e3a8a;
+      --ok: #4ade80;
+      --ok-soft: #14532d;
+      --bad: #f87171;
+      --bad-soft: #7f1d1d;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --card: #1f2937;
+      --bg: #111827;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+  }
+  #app {
+    width: 100%;
+    max-width: 560px;
+    padding: 14px 16px calc(20px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+  section[hidden] { display: none !important; }
+  .top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .back-link { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 15px; }
+  h1 { font-size: 24px; margin: 10px 0 4px; text-align: center; }
+  h2 { font-size: 15px; font-weight: 500; margin: 0 0 16px; text-align: center; color: var(--muted); }
+
+  .info-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
+    line-height: 1.65;
+    font-size: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+
+  button {
+    font-family: inherit;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .primary {
+    width: 100%;
+    padding: 17px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    margin-top: 8px;
+  }
+  .secondary {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-top: 8px;
+  }
+
+  header.quiz {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 2px;
+  }
+  .score-box { display: flex; gap: 12px; font-weight: 700; font-size: 16px; }
+  .score-ok { color: var(--ok); }
+  .score-bad { color: var(--bad); }
+  #progress { color: var(--muted); font-size: 15px; font-weight: 600; }
+
+  .bar { height: 6px; border-radius: 3px; background: var(--accent-soft); overflow: hidden; }
+  #bar-fill { height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+
+  #q-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 24px 18px;
+    text-align: center;
+    margin: 14px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  #q-label { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  #q-word { font-size: 26px; font-weight: 800; line-height: 1.3; }
+  #q-sub { color: var(--accent); font-size: 16px; font-weight: 600; margin-top: 10px; }
+
+  #options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    padding: 16px 14px;
+    font-size: 20px;
+    font-weight: 700;
+    background: var(--card);
+    color: var(--text);
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    text-align: center;
+    min-height: 54px;
+  }
+  .opt.correct { background: var(--ok-soft); color: var(--ok); outline: 2px solid var(--ok); }
+  .opt.wrong { background: var(--bad-soft); color: var(--bad); outline: 2px solid var(--bad); }
+
+  #feedback {
+    min-height: 50px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    padding-top: 10px;
+    color: var(--muted);
+  }
+  #feedback.ok { color: var(--ok); }
+  #feedback.bad { color: var(--bad); }
+
+  .link-btn {
+    background: none;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 8px;
+    text-decoration: underline;
+    margin: auto auto 0;
+  }
+  .result-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 24px 18px;
+    text-align: center;
+    margin: 16px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  .mistake-row {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 11px 14px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top-nav">
+    <a class="back-link" href="index.html">← Все тесты</a>
+    <span style="font-size:13px;color:var(--muted);">Фразы в контексте</span>
+  </div>
+
+  <section id="screen-start">
+    <h1>Фразы из таблицы 💬</h1>
+    <h2>Подставь правильный глагол в живое выражение</h2>
+
+    <div class="info-card">
+      В твоей таблице у каждого глагола есть устойчивое сочетание или пример:<br>
+      • <b>κάνω βόλτα</b> — гулять<br>
+      • <b>παίρνω τηλέφωνο</b> — звонить<br>
+      • <b>ρίχνω ματιά</b> — бросить взгляд<br>
+      • <b>στρώνω το τραπέζι</b> — накрывать на стол<br>
+      • <b>δεν πειράζει</b> — ничего страшного<br>
+      • <b>λέω ψέματα</b> — обманывать (говорить ложь)
+    </div>
+
+    <button class="primary" id="btn-start">Начать тренировку (45 фраз)</button>
+  </section>
+
+  <section id="screen-quiz" hidden style="display:flex;flex-direction:column;flex:1;">
+    <header class="quiz">
+      <div id="progress"></div>
+      <div class="score-box">
+        <span class="score-ok">✔ <span id="score-ok">0</span></span>
+        <span class="score-bad">✖ <span id="score-bad">0</span></span>
+      </div>
+    </header>
+    <div class="bar"><div id="bar-fill"></div></div>
+    <div id="q-card">
+      <div id="q-label">Какой глагол пропущен во фразе?</div>
+      <div id="q-word"></div>
+      <div id="q-sub"></div>
+    </div>
+    <div id="options"></div>
+    <div id="feedback"></div>
+    <button class="link-btn" id="btn-finish">завершить тест</button>
+  </section>
+
+  <section id="screen-end" hidden>
+    <div class="result-card">
+      <div id="result-emoji" style="font-size:48px;"></div>
+      <div id="result-score" style="font-size:36px;font-weight:800;margin:6px 0;"></div>
+      <div id="result-grade" style="font-size:17px;font-weight:600;color:var(--accent);"></div>
+    </div>
+    <div id="mistakes"></div>
+    <button class="primary" id="btn-again">Ещё раз</button>
+    <button class="secondary" id="btn-drill" hidden>Тренировать ошибки</button>
+    <button class="secondary" id="btn-home">Назад</button>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+// [пропущенный_глагол, продолжение_фразы, перевод_всей_фразы]
+const PHRASES = [
+  ["αγοράζω","τα λαχανικά και φρούτα","покупать овощи и фрукты"],
+  ["αλλάζω","τα ρούχα","менять одежду"],
+  ["ανάβω","φως","включать свет"],
+  ["σβήνω","φως","выключать свет"],
+  ["ανεβαίνω","σκάλες","подниматься по лестнице"],
+  ["κατεβαίνω","σκάλες","спускаться по лестнице"],
+  ["ανοίγω","το παράθυρο","открывать окно"],
+  ["κλείνω","την πόρτα","закрывать дверь"],
+  ["απλώνω","το χέρι","протягивать руку"],
+  ["σηκώνω","το χέρι","поднимать руку"],
+  ["αρχίζω","το μάθημα στις 8 το πρωί","начинать урок в 8 утра"],
+  ["βγάζω","το βιβλίο από το συρτάρι","вытаскивать книгу из ящика"],
+  ["βγαίνω","από το σπίτι νωρίς","выходить из дома рано"],
+  ["βλέπω","τηλεόραση","смотреть телевизор"],
+  ["βρίσκω","τα κλειδιά μου","находить свои ключи"],
+  ["χάνω","τα κλειδιά μου","терять свои ключи"],
+  ["γεμίζω","το ποτήρι με νερό","наполнять стакан водой"],
+  ["γιορτάζω","τα γενέθλια","праздновать день рождения"],
+  ["δανείζω","τα λεφτά στον φίλο μου","занимать деньги другу"],
+  ["ετοιμάζω","τις βαλίτσες","собирать (готовить) чемоданы"],
+  ["έχω","καλό κέφι","иметь хорошее настроение"],
+  ["καθαρίζω","το σπίτι","убирать дом"],
+  ["κάνω","βόλτα","гулять (совершать прогулку)"],
+  ["κερδίζω","τα χρήματα","зарабатывать деньги"],
+  ["κόβω","το ψωμί με το μαχαίρι","резать хлеб ножом"],
+  ["μαζεύω","χρήματα για τις διακοπές","собирать деньги на отпуск"],
+  ["μένω","στην Κύπρο / στην Ελλάδα","жить на Кипре / в Греции"],
+  ["μοιάζω","πολύ στον πατέρα μου","быть очень похожим на папу"],
+  ["μπαίνω","μέσα στην αίθουσα","входить внутрь аудитории"],
+  ["νοικιάζω","το δωμάτιο","снимать комнату"],
+  ["παίρνω","τηλέφωνο","звонить по телефону"],
+  ["παραγγέλνω","το φαγητό στο καφενείο","заказывать еду в кафе"],
+  ["δεν πειράζει","(устойчивая фраза)","ничего страшного!"],
+  ["πλένω","τα χέρια μου","мыть руки"],
+  ["πληρώνω","τον λογαριασμό","оплачивать счёт"],
+  ["ρίχνω","ματιά","бросить взгляд"],
+  ["σιδερώνω","τα ρούχα","гладить одежду"],
+  ["στέλνω","το γράμμα","отправлять письмо"],
+  ["στρίβω","στην γωνία","поворачивать на углу"],
+  ["στρώνω","το τραπέζι","накрывать на стол"],
+  ["συμπληρώνω","τα κενά","заполнять пропуски"],
+  ["φεύγω","στην ώρα","уходить вовремя"],
+  ["χτενίζω","τα μαλλιά μου","причёсывать волосы"],
+  ["ψάχνω","το διαβατήριό μου","искать свой паспорт"],
+  ["λέω","ψέματα","говорить неправду, обманывать"],
+  ["ζητώ","βοήθεια","просить помощи"],
+  ["κουνώ","το κεφάλι","качать / кивать головой"],
+  ["ακολουθώ","την δίαιτα","следовать диете"],
+  ["οδηγώ","το αυτοκίνητο","вести машину"]
+];
+
+const $ = (id) => document.getElementById(id);
+let state = null;
+let nextTimeout = null;
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuestions(customList) {
+  const pool = shuffle(customList ? [...customList] : [...PHRASES]).slice(0, 45);
+  return pool.map((item) => {
+    const [verb, tail, ru] = item;
+    const others = shuffle(PHRASES.filter((p) => p[0] !== verb)).slice(0, 3).map((p) => p[0]);
+    return {
+      item,
+      verb,
+      tail,
+      ru,
+      opts: shuffle([verb, ...others]),
+      full: verb + " " + tail + " — " + ru
+    };
+  });
+}
+
+function show(name) {
+  $("screen-start").hidden = (name !== "start");
+  $("screen-quiz").hidden = (name !== "quiz");
+  $("screen-end").hidden = (name !== "end");
+}
+
+function startGame(customList) {
+  state = {
+    questions: buildQuestions(customList),
+    idx: 0,
+    score: 0,
+    mistakes: [],
+    locked: false
+  };
+  show("quiz");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = state.questions[state.idx];
+  state.locked = false;
+  $("progress").textContent = (state.idx + 1) + " / " + state.questions.length;
+  $("score-ok").textContent = state.score;
+  $("score-bad").textContent = state.mistakes.length;
+  $("bar-fill").style.width = (state.idx / state.questions.length * 100) + "%";
+  $("feedback").textContent = "";
+  $("feedback").className = "";
+
+  $("q-word").textContent = "___ " + q.tail;
+  $("q-sub").textContent = "«" + q.ru + "»";
+
+  const box = $("options");
+  box.innerHTML = "";
+  for (const opt of q.opts) {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = opt;
+    b.addEventListener("click", () => answer(b, opt));
+    box.appendChild(b);
+  }
+}
+
+function answer(btn, opt) {
+  if (state.locked) return;
+  state.locked = true;
+  const q = state.questions[state.idx];
+  const ok = opt === q.verb;
+
+  for (const b of $("options").children) {
+    b.disabled = true;
+    if (b.textContent === q.verb) b.classList.add("correct");
+  }
+  if (ok) {
+    state.score++;
+    $("score-ok").textContent = state.score;
+    $("feedback").textContent = "Σωστά! ✔ " + q.full;
+    $("feedback").className = "ok";
+  } else {
+    btn.classList.add("wrong");
+    state.mistakes.push(q.item);
+    $("score-bad").textContent = state.mistakes.length;
+    $("feedback").textContent = q.full;
+    $("feedback").className = "bad";
+    if (navigator.vibrate) navigator.vibrate(70);
+  }
+
+  nextTimeout = setTimeout(() => {
+    state.idx++;
+    if (state.idx >= state.questions.length) finish();
+    else renderQuestion();
+  }, ok ? 700 : 1600);
+}
+
+function finish() {
+  clearTimeout(nextTimeout);
+  const total = Math.max(1, state.score + state.mistakes.length);
+  const pct = Math.round(state.score / total * 100);
+  $("result-emoji").textContent = pct >= 85 ? "🏆" : pct >= 65 ? "🎉" : "💪";
+  $("result-score").textContent = state.score + " / " + total;
+  $("result-grade").textContent = "Точность: " + pct + "%";
+
+  const m = $("mistakes");
+  m.innerHTML = "";
+  if (state.mistakes.length) {
+    const h = document.createElement("h3");
+    h.style.fontSize = "16px";
+    h.textContent = "Повтори выражения (" + state.mistakes.length + "):";
+    m.appendChild(h);
+    for (const [v, t, r] of state.mistakes) {
+      const d = document.createElement("div");
+      d.className = "mistake-row";
+      d.textContent = v + " " + t + " — " + r;
+      m.appendChild(d);
+    }
+  }
+  const drill = $("btn-drill");
+  drill.hidden = state.mistakes.length === 0;
+  drill.textContent = "Тренировать ошибки (" + state.mistakes.length + ")";
+  show("end");
+}
+
+$("btn-start").addEventListener("click", () => startGame(null));
+$("btn-finish").addEventListener("click", finish);
+$("btn-again").addEventListener("click", () => startGame(null));
+$("btn-drill").addEventListener("click", () => startGame(state.mistakes));
+$("btn-home").addEventListener("click", () => show("start"));
+</script>
+</body>
+</html>

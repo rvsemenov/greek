@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Греческие глаголы — тест</title>
+<style>
+  :root {
+    --accent: #4f46e5;
+    --accent-soft: #eef2ff;
+    --ok: #16a34a;
+    --ok-soft: #dcfce7;
+    --bad: #dc2626;
+    --bad-soft: #fee2e2;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --bg: #f3f4f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --accent: #818cf8;
+      --accent-soft: #312e81;
+      --ok: #4ade80;
+      --ok-soft: #14532d;
+      --bad: #f87171;
+      --bad-soft: #7f1d1d;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --card: #1f2937;
+      --bg: #111827;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+  }
+  #app {
+    width: 100%;
+    max-width: 560px;
+    padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+  section[hidden] { display: none !important; }
+
+  h1 { font-size: 28px; margin: 24px 0 4px; text-align: center; }
+  h2 { font-size: 18px; font-weight: 600; margin: 0 0 16px; text-align: center; color: var(--muted); }
+  .stats { text-align: center; color: var(--muted); font-size: 14px; margin: 0 0 16px; }
+
+  .info-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin: 0 0 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    font-size: 15px;
+    line-height: 1.9;
+  }
+  .best-line {
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 16px;
+    min-height: 20px;
+  }
+
+  button {
+    font-family: inherit;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .primary {
+    width: 100%;
+    padding: 18px;
+    font-size: 19px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    margin-top: auto;
+  }
+  .primary:active { transform: scale(.98); }
+  .secondary {
+    width: 100%;
+    padding: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-top: 10px;
+  }
+
+  /* --- quiz --- */
+  header.quiz {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 4px;
+    font-variant-numeric: tabular-nums;
+  }
+  #timer { font-size: 22px; font-weight: 800; }
+  #timer.warn { color: var(--bad); animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: .45; } }
+  #score { font-size: 18px; font-weight: 700; color: var(--ok); }
+  #progress { color: var(--muted); font-size: 15px; }
+
+  .bar { height: 6px; border-radius: 3px; background: var(--accent-soft); overflow: hidden; }
+  #bar-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+
+  #q-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px 20px;
+    text-align: center;
+    margin: 18px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  #q-label { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+  #q-word { font-size: 40px; font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; }
+  #q-word.ru { font-size: 30px; }
+
+  #options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    padding: 17px 14px;
+    font-size: 18px;
+    font-weight: 600;
+    background: var(--card);
+    color: var(--text);
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    text-align: center;
+    min-height: 56px;
+    transition: background .15s, color .15s;
+  }
+  .opt.greek { font-size: 22px; }
+  .opt.correct { background: var(--ok-soft); color: var(--ok); outline: 2px solid var(--ok); }
+  .opt.wrong { background: var(--bad-soft); color: var(--bad); outline: 2px solid var(--bad); }
+  .opt:disabled { cursor: default; }
+
+  #feedback {
+    min-height: 52px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    padding-top: 12px;
+    color: var(--muted);
+  }
+  #feedback.ok { color: var(--ok); }
+  #feedback.bad { color: var(--bad); }
+
+  .finish-link {
+    background: none;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 8px;
+    text-decoration: underline;
+    margin: 0 auto;
+  }
+
+  /* --- end --- */
+  .result-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px 20px;
+    text-align: center;
+    margin: 24px 0 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  #result-emoji { font-size: 52px; }
+  #result-score { font-size: 40px; font-weight: 800; margin: 8px 0; }
+  #result-grade { font-size: 18px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+  #result-extra { color: var(--muted); font-size: 14px; }
+
+  #mistakes h3 { font-size: 16px; margin: 18px 0 8px; }
+  .mistake-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  }
+  .mistake-row .gr { font-weight: 700; overflow-wrap: anywhere; }
+  .mistake-row .ru { color: var(--muted); text-align: right; overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ЭКРАН СТАРТА -->
+  <section id="screen-start" style="display:flex;flex-direction:column;flex:1;">
+    <h1>Τεστ 🇬🇷</h1>
+    <h2>Тест по греческим глаголам</h2>
+    <p class="stats" id="verb-count"></p>
+    <div class="info-card">
+      ⏱️ 10 минут на тест<br>
+      📝 30 вопросов с вариантами<br>
+      ↔️ перевод в обе стороны<br>
+      🔁 можно проходить много раз
+    </div>
+    <div class="best-line" id="best-line"></div>
+    <button class="primary" id="btn-start">Начать тест</button>
+  </section>
+
+  <!-- ЭКРАН ТЕСТА -->
+  <section id="screen-quiz" hidden>
+    <header class="quiz">
+      <div id="timer">10:00</div>
+      <div id="progress"></div>
+      <div id="score">0</div>
+    </header>
+    <div class="bar"><div id="bar-fill"></div></div>
+    <div id="q-card">
+      <div id="q-label"></div>
+      <div id="q-word"></div>
+    </div>
+    <div id="options"></div>
+    <div id="feedback"></div>
+    <button class="finish-link" id="btn-finish">закончить тест</button>
+  </section>
+
+  <!-- ЭКРАН РЕЗУЛЬТАТА -->
+  <section id="screen-end" hidden>
+    <div class="result-card">
+      <div id="result-emoji"></div>
+      <div id="result-score"></div>
+      <div id="result-grade"></div>
+      <div id="result-extra"></div>
+    </div>
+    <div id="mistakes"></div>
+    <button class="primary" id="btn-again">Пройти ещё раз</button>
+    <button class="secondary" id="btn-home">На главную</button>
+  </section>
+
+</div>
+
+<script>
+"use strict";
+
+// [глагол, перевод] — из source/verbs.pdf
+const VERBS = [
+["αγοράζω","покупать"],["αλλάζω","менять"],["ανάβω","включать, зажигать"],["ανακατεύω","перемешивать"],
+["ανεβαίνω","подниматься"],["ανοίγω","открывать, включать"],["απλώνω","протягивать"],["αποφασίζω","решать"],
+["αρέσω","нравиться"],["αρρωσταίνω","заболевать"],["αρχίζω","начинать"],["αφήνω","оставлять, покидать"],
+["βάζω","ставить, класть"],["βγάζω","вытаскивать"],["βγαίνω","выходить"],["βήχω","кашлять"],
+["βλέπω","видеть"],["βρέχει","идёт дождь"],["βρίσκω","находить"],["γεμίζω","наполнять"],
+["γιορτάζω","праздновать"],["γκρινιάζω","ругаться"],["γνωρίζω","узнавать"],["γράφω","писать"],
+["γυρίζω","возвращаться"],["δανείζω","занимать, давать взаймы"],["δείχνω","показывать"],["διαβάζω","читать"],
+["διασκεδάζω","развлекаться"],["διαφημίζω","рекламировать"],["διδάσκω","преподавать"],["δίνω","давать"],
+["δοκιμάζω","пробовать, примерять"],["δουλεύω","работать"],["εξετάζω","изучать"],["ελπίζω","надеяться"],
+["επαναλαμβάνω","повторять"],["ετοιμάζω","готовить, собирать"],["έχω","иметь"],["ζεσταίνω","согревать, греть"],
+["ζωγραφίζω","рисовать"],["θέλω","хотеть"],["θυμώνω","сердиться"],["καθαρίζω","чистить, убирать"],
+["καλυτερεύω","улучшать"],["κάνω","делать"],["καπνίζω","курить"],["καταλαβαίνω","понимать"],
+["κατεβαίνω","спускаться"],["κερδίζω","выигрывать, зарабатывать"],["κλείνω","закрывать"],["κλίνω","склонять"],
+["κόβω","резать"],["κοιτάζω","смотреть"],["κοκκινίζω","краснеть"],["κρύβω","прятать"],
+["κρυώνω","мёрзнуть"],["λείπω","не хватать, отсутствовать"],["λερώνω","пачкать"],["λούζω","купать"],
+["μαγειρεύω","готовить еду"],["μαζεύω","собирать"],["μαθαίνω","учить, изучать"],["μαυρίζω","загорать"],
+["μεγαλώνω","расти, вырастать"],["μένω","жить, оставаться"],["μεταφράζω","переводить"],["μοιάζω","быть похожим"],
+["μορφώνω","давать образование"],["μπαίνω","входить"],["νιώθω","чувствовать"],["νοικιάζω","снимать, нанимать"],
+["νομίζω","думать, считать"],["ντύνω","надевать"],["ξέρω","знать, уметь"],["ξημερώνει","рассветать"],
+["παίζω","играть"],["παίρνω","брать, получать"],["παραγγέλνω","заказывать"],["πειράζω","обижать, беспокоить"],
+["περιμένω","ждать"],["πέφτω","падать"],["πηγαίνω / πάω","идти, ехать"],["πίνω","пить"],
+["πιστεύω","верить"],["πλένω","мыть, стирать"],["πληρώνω","платить"],["πρέπει","надо, должен"],
+["προσέχω","обращать внимание"],["ρίχνω","бросать"],["σβήνω","выключать, гасить"],["σηκώνω","поднимать"],
+["σημαίνω","означать"],["σιδερώνω","гладить (бельё)"],["σπουδάζω","учиться (в вузе)"],["στέλνω","посылать, отправлять"],
+["στρίβω","поворачивать"],["στρώνω","стелить, накрывать (стол)"],["συμβαίνει","случаться, происходить"],["συμπληρώνω","дополнять, заполнять"],
+["συνεχίζω","продолжать"],["σχηματίζω","составлять"],["ταξιδεύω","путешествовать"],["τελειώνω","заканчивать"],
+["τηγανίζω","жарить"],["τρέχω","бежать"],["υπάρχει","существовать, иметься"],["φέρνω","приносить, привозить"],
+["φεύγω","уходить, уезжать"],["φτάνω","прибывать"],["φτιάχνω","мастерить, изготовлять"],["φωνάζω","кричать, звать"],
+["χάνω","терять"],["χορεύω","танцевать"],["χτενίζω","причёсывать"],["χωρίζω","разделять, разводиться"],
+["ψάχνω","искать"],["ψωνίζω","покупать (продукты)"],
+// слитные глаголы
+["λέω","говорить"],["τρώω","кушать, есть"],["ακούω","слушать, слышать"],["κλαίω","плакать"],
+["καίω","гореть, жечь"],["φταίω","быть виноватым"],
+// 2 спряжение Β1
+["αγαπώ","любить"],["απαντώ","отвечать"],["βοηθώ","помогать"],["γελώ","смеяться"],
+["γεννώ","рождать"],["διψώ","хотеть пить"],["ζητώ","просить"],["κερνώ","угощать"],
+["κολυμπώ","плавать"],["κουνώ","качать, кивать"],["κοιτώ","смотреть"],["κρατώ","держать"],
+["μελετώ","изучать (углублённо)"],["μιλώ","разговаривать"],["νικώ","побеждать"],["ξεχνώ","забывать"],
+["ξυπνώ","просыпаться, будить"],["παρακαλώ","умолять, просить"],["πεινώ","голодать"],["περνώ","проходить, проводить (время)"],
+["περπατώ","ходить пешком"],["πετώ","летать, бросать"],["πηδώ","прыгать"],["πουλώ","продавать"],
+["προτιμώ","предпочитать"],["ρωτώ","спрашивать"],["σταματώ","останавливать(ся)"],["συζητώ","обсуждать"],
+["συναντώ","встречать"],["τραγουδώ","петь"],["φιλώ","целовать"],["φορώ","носить, надевать"],
+["φυσώ","дуть"],["χαιρετώ","приветствовать"],["χαλώ","ломать, портить"],["χτυπώ","бить, стучать"],
+["χαμογελώ","улыбаться"],
+// 2 спряжение Β2
+["αδιαφορώ","быть безразличным"],["ακολουθώ","следовать"],["ανησυχώ","беспокоиться, волноваться"],["αποτελώ","составлять, являться"],
+["αργώ","опаздывать"],["δημιουργώ","создавать"],["διαρκώ","длиться"],["διαφωνώ","не соглашаться"],
+["εκτελώ","выполнять"],["ενοχλώ","беспокоить, мешать"],["επαινώ","хвалить"],["επικοινωνώ","общаться"],
+["εξηγώ","объяснять"],["ευχαριστώ","благодарить"],["θεωρώ","считать, полагать"],["καλλιεργώ","возделывать"],
+["καλώ","звать, приглашать"],["κατοικώ","проживать"],["κληρονομώ","наследовать"],["λειτουργώ","функционировать"],
+["μισώ","ненавидеть"],["μπορώ","мочь"],["νοσταλγώ","тосковать"],["οδηγώ","вести (машину)"],
+["παρακολουθώ","наблюдать, следить"],["παρατηρώ","замечать"],["πληροφορώ","информировать"],["προσπαθώ","стараться, пытаться"],
+["προχωρώ","продвигаться"],["συγχωρώ","прощать"],["συμπαθώ","симпатизировать"],["συμφωνώ","соглашаться"],
+["τηλεφωνώ","звонить (по телефону)"],["τιμωρώ","наказывать"],["χρησιμοποιώ","использовать"]
+];
+
+const QUIZ_SIZE = 30;
+const TIME_LIMIT = 600; // 10 минут, секунды
+
+const $ = (id) => document.getElementById(id);
+const screens = { start: $("screen-start"), quiz: $("screen-quiz"), end: $("screen-end") };
+
+let state = null;
+let timerId = null;
+let nextTimeout = null;
+
+function show(name) {
+  for (const k in screens) screens[k].hidden = (k !== name);
+}
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const norm = (s) => s.toLowerCase().replace(/\s+/g, " ").trim();
+
+function buildQuestions(onlyMissed) {
+  // сколько раз встречается каждый русский перевод — для уникальности вопросов «RU → GR»
+  const ruCount = {};
+  for (const [, ru] of VERBS) {
+    const k = norm(ru);
+    ruCount[k] = (ruCount[k] || 0) + 1;
+  }
+
+  const pool = shuffle(onlyMissed ? [...onlyMissed] : [...VERBS]);
+  const questions = [];
+  const seen = new Set();
+
+  for (const verb of pool) {
+    if (questions.length >= Math.min(QUIZ_SIZE, pool.length)) break;
+    if (seen.has(verb[0])) continue;
+    seen.add(verb[0]);
+
+    const ruUnique = ruCount[norm(verb[1])] === 1;
+    const dir = ruUnique && Math.random() < 0.5 ? "ru2gr" : "gr2ru";
+    const correct = dir === "gr2ru" ? verb[1] : verb[0];
+
+    const others = shuffle(VERBS.filter((v) => v !== verb));
+    const opts = [correct];
+    for (const o of others) {
+      if (opts.length >= 4) break;
+      const cand = dir === "gr2ru" ? o[1] : o[0];
+      if (opts.some((x) => norm(x) === norm(cand))) continue;
+      opts.push(cand);
+    }
+    questions.push({ verb, dir, correct, opts: shuffle(opts) });
+  }
+  return questions;
+}
+
+function fmt(sec) {
+  const m = Math.floor(sec / 60), s = sec % 60;
+  return m + ":" + String(s).padStart(2, "0");
+}
+
+function startGame(onlyMissed) {
+  state = {
+    questions: buildQuestions(onlyMissed),
+    idx: 0,
+    score: 0,
+    mistakes: [],
+    endAt: Date.now() + TIME_LIMIT * 1000,
+    locked: false,
+  };
+  show("quiz");
+  $("score").textContent = "0";
+  $("timer").classList.remove("warn");
+  renderQuestion();
+  clearInterval(timerId);
+  timerId = setInterval(tick, 250);
+  tick();
+}
+
+function tick() {
+  const left = Math.max(0, Math.round((state.endAt - Date.now()) / 1000));
+  $("timer").textContent = fmt(left);
+  if (left <= 60) $("timer").classList.add("warn");
+  if (left <= 0) finish();
+}
+
+function renderQuestion() {
+  const q = state.questions[state.idx];
+  state.locked = false;
+  $("progress").textContent = (state.idx + 1) + " / " + state.questions.length;
+  $("bar-fill").style.width = (state.idx / state.questions.length * 100) + "%";
+  $("feedback").textContent = "";
+  $("feedback").className = "";
+
+  const isGr = q.dir === "gr2ru";
+  $("q-label").textContent = isGr ? "Как переводится?" : "Как сказать по-гречески?";
+  const w = $("q-word");
+  w.textContent = isGr ? q.verb[0] : q.verb[1];
+  w.className = isGr ? "" : "ru";
+
+  const box = $("options");
+  box.innerHTML = "";
+  for (const opt of q.opts) {
+    const b = document.createElement("button");
+    b.className = "opt" + (isGr ? "" : " greek");
+    b.textContent = opt;
+    b.addEventListener("click", () => answer(b, opt));
+    box.appendChild(b);
+  }
+}
+
+function answer(btn, opt) {
+  if (state.locked) return;
+  state.locked = true;
+
+  const q = state.questions[state.idx];
+  const correct = norm(opt) === norm(q.correct);
+  const buttons = $("options").children;
+  for (const b of buttons) {
+    b.disabled = true;
+    if (norm(b.textContent) === norm(q.correct)) b.classList.add("correct");
+  }
+  if (correct) {
+    state.score++;
+    $("score").textContent = state.score;
+    $("feedback").textContent = pick(["Σωστά! ✔", "Μπράβο! 👏", "Точно! ✅", "Отлично! 🎉"]);
+    $("feedback").className = "ok";
+  } else {
+    btn.classList.add("wrong");
+    $("feedback").textContent = "Правильно: " + q.verb[0] + " — " + q.verb[1];
+    $("feedback").className = "bad";
+    if (navigator.vibrate) navigator.vibrate(80);
+    state.mistakes.push(q.verb);
+  }
+
+  nextTimeout = setTimeout(() => {
+    state.idx++;
+    if (state.idx >= state.questions.length) finish();
+    else renderQuestion();
+  }, correct ? 650 : 1500);
+}
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function finish() {
+  clearInterval(timerId);
+  clearTimeout(nextTimeout);
+
+  const total = state.questions.length;
+  const pct = Math.round(state.score / total * 100);
+  let emoji, grade;
+  if (pct >= 90)      { emoji = "🏆"; grade = "Άριστα! Блестяще!"; }
+  else if (pct >= 70) { emoji = "🎉"; grade = "Πολύ καλά! Отличный результат"; }
+  else if (pct >= 50) { emoji = "👍"; grade = "Καλά! Хорошо, но есть куда расти"; }
+  else                { emoji = "💪"; grade = "Нужно ещё потренироваться"; }
+
+  $("result-emoji").textContent = emoji;
+  $("result-score").textContent = state.score + " / " + total;
+  $("result-grade").textContent = grade;
+  const left = Math.max(0, Math.round((state.endAt - Date.now()) / 1000));
+  $("result-extra").textContent = pct + "% · осталось времени: " + fmt(left);
+
+  const bestKey = "greek-verbs-quiz-best";
+  const best = JSON.parse(localStorage.getItem(bestKey) || "null");
+  let bestLine = "";
+  if (!best || pct > best.pct || (pct === best.pct && state.score > best.score)) {
+    localStorage.setItem(bestKey, JSON.stringify({ pct, score: state.score, total }));
+    bestLine = "🥇 Новый личный рекорд!";
+  } else {
+    bestLine = "Личный рекорд: " + best.score + "/" + best.total + " (" + best.pct + "%)";
+  }
+
+  const m = $("mistakes");
+  m.innerHTML = "";
+  if (state.mistakes.length) {
+    m.innerHTML = "<h3>Ошибка «" + state.mistakes.length + "» — повтори:</h3>";
+    for (const [gr, ru] of state.mistakes) {
+      const row = document.createElement("div");
+      row.className = "mistake-row";
+      row.innerHTML = "<span class='gr'></span><span class='ru'></span>";
+      row.querySelector(".gr").textContent = gr;
+      row.querySelector(".ru").textContent = ru;
+      m.appendChild(row);
+    }
+  }
+
+  show("end");
+  const again = $("btn-again");
+  again.textContent = "Пройти ещё раз";
+  // отдельная кнопка «тренировать ошибки»
+  let drill = $("btn-drill");
+  if (state.mistakes.length) {
+    if (!drill) {
+      drill = document.createElement("button");
+      drill.id = "btn-drill";
+      drill.className = "secondary";
+      again.parentNode.insertBefore(drill, again.nextSibling);
+      drill.addEventListener("click", () => startGame(state.mistakes));
+    }
+    drill.hidden = false;
+    drill.textContent = "Тренировать ошибки (" + state.mistakes.length + ")";
+  } else if (drill) drill.hidden = true;
+
+  const prevBl = document.querySelector("#screen-end .best-line");
+  if (prevBl) prevBl.remove();
+  const bl = document.createElement("div");
+  bl.className = "best-line";
+  bl.textContent = bestLine;
+  $("result-extra").after(bl);
+}
+
+// --- init ---
+$("verb-count").textContent = VERBS.length + " глаголов · 1 и 2 спряжение · слитные";
+function renderBest() {
+  const best = JSON.parse(localStorage.getItem("greek-verbs-quiz-best") || "null");
+  $("best-line").textContent = best ? "🏅 Личный рекорд: " + best.score + "/" + best.total + " (" + best.pct + "%)" : "";
+}
+renderBest();
+
+$("btn-start").addEventListener("click", startGame.bind(null, null));
+$("btn-again").addEventListener("click", startGame.bind(null, null));
+$("btn-finish").addEventListener("click", () => {
+  if (state && state.idx > 0) finish();
+});
+$("btn-home").addEventListener("click", () => {
+  renderBest();
+  show("start");
+});
+</script>
+</body>
+</html>

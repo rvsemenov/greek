@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ea580c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Аорист и будущее — правила и формы</title>
+<style>
+  :root {
+    --accent: #ea580c;
+    --accent-soft: #ffedd5;
+    --ok: #16a34a;
+    --ok-soft: #dcfce7;
+    --bad: #dc2626;
+    --bad-soft: #fee2e2;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --bg: #f3f4f6;
+    --border: #e5e7eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --accent: #fb923c;
+      --accent-soft: #431407;
+      --ok: #4ade80;
+      --ok-soft: #14532d;
+      --bad: #f87171;
+      --bad-soft: #7f1d1d;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --card: #1f2937;
+      --bg: #111827;
+      --border: #374151;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+  }
+  #app {
+    width: 100%;
+    max-width: 560px;
+    padding: 14px 16px calc(20px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+  section[hidden] { display: none !important; }
+  .top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .back-link { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 15px; }
+  h1 { font-size: 24px; margin: 10px 0 4px; text-align: center; }
+  h2 { font-size: 15px; font-weight: 500; margin: 0 0 14px; text-align: center; color: var(--muted); }
+
+  .rule-box {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.55;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  .rule-box b { color: var(--accent); }
+  .rule-item { margin-bottom: 7px; padding-bottom: 7px; border-bottom: 1px solid var(--border); }
+  .rule-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+  button {
+    font-family: inherit;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .primary {
+    width: 100%;
+    padding: 17px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    margin-top: 8px;
+  }
+  .secondary {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-top: 8px;
+  }
+
+  header.quiz {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 2px;
+  }
+  .score-box { display: flex; gap: 12px; font-weight: 700; font-size: 16px; }
+  .score-ok { color: var(--ok); }
+  .score-bad { color: var(--bad); }
+  #progress { color: var(--muted); font-size: 15px; font-weight: 600; }
+
+  .bar { height: 6px; border-radius: 3px; background: var(--accent-soft); overflow: hidden; }
+  #bar-fill { height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+
+  #q-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 22px 18px;
+    text-align: center;
+    margin: 14px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  #q-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 4px 10px;
+    border-radius: 99px;
+    margin-bottom: 8px;
+  }
+  #q-label { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  #q-word { font-size: 34px; font-weight: 800; line-height: 1.2; }
+  #q-sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+  #options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    padding: 16px 14px;
+    font-size: 20px;
+    font-weight: 700;
+    background: var(--card);
+    color: var(--text);
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    text-align: center;
+    min-height: 54px;
+  }
+  .opt.correct { background: var(--ok-soft); color: var(--ok); outline: 2px solid var(--ok); }
+  .opt.wrong { background: var(--bad-soft); color: var(--bad); outline: 2px solid var(--bad); }
+
+  #feedback {
+    min-height: 50px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    padding-top: 10px;
+    color: var(--muted);
+  }
+  #feedback.ok { color: var(--ok); }
+  #feedback.bad { color: var(--bad); }
+
+  .link-btn {
+    background: none;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 8px;
+    text-decoration: underline;
+    margin: auto auto 0;
+  }
+  .result-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 24px 18px;
+    text-align: center;
+    margin: 16px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  .mistake-row {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 11px 14px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top-nav">
+    <a class="back-link" href="index.html">← Все тесты</a>
+    <span style="font-size:13px;color:var(--muted);">Аорист и будущее</span>
+  </div>
+
+  <section id="screen-start">
+    <h1>Αόριστος & Μέλλοντας Απλός ⚡</h1>
+    <h2>Правила из шапки таблицы + неправильные глаголы</h2>
+
+    <div class="rule-box">
+      <div class="rule-item"><b>1) -νω, -ζω, -θω → -σα</b>: τελειώνω → τελείωσα, αγοράζω → αγόρασα, ντύνω → έντυσα</div>
+      <div class="rule-item"><b>2) -κω, -γω, -χω, -σκω, -χνω → -ξα</b>: ανοίγω → άνοιξα (и ряд глаголов на -ζω: αλλάζω → άλλαξα, παίζω → έπαιξα, κοιτάζω → κοίταξα, φωνάζω → φώναξα)</div>
+      <div class="rule-item"><b>3) -πω, -βω, -φω, -πτω → -ψα</b>: βάφω → έβαψα, ανάβω → άναψα, κλαίω → έκλαψα</div>
+      <div class="rule-item"><b>4) -εύω → -εψα</b>: παντρεύω → πάντρεψα, ανακατεύω → ανακάτεψα</div>
+      <div class="rule-item"><b>5) Приращение и ударение</b>: если 2 слога — добавляем в начале <b>έ-</b>, ударение на 3-м слоге с конца (в Μέλλοντας Απλός «έ-» убирается: <i>έγραψα → θα γράψω</i>)</div>
+      <div class="rule-item"><b>6) 2 спряжение (Β1/Β2)</b>: основа + <b>-ησα / -ασα / -εσα / -ηξα</b> (νικώ → νίκησα, γελώ → γέλασα, φορώ → φόρεσα)</div>
+    </div>
+
+    <button class="primary" id="btn-start">Начать тренировку (все 55 глаголов)</button>
+  </section>
+
+  <section id="screen-quiz" hidden style="display:flex;flex-direction:column;flex:1;">
+    <header class="quiz">
+      <div id="progress"></div>
+      <div class="score-box">
+        <span class="score-ok">✔ <span id="score-ok">0</span></span>
+        <span class="score-bad">✖ <span id="score-bad">0</span></span>
+      </div>
+    </header>
+    <div class="bar"><div id="bar-fill"></div></div>
+    <div id="q-card">
+      <div id="q-tag"></div>
+      <div id="q-label"></div>
+      <div id="q-word"></div>
+      <div id="q-sub"></div>
+    </div>
+    <div id="options"></div>
+    <div id="feedback"></div>
+    <button class="link-btn" id="btn-finish">завершить тест</button>
+  </section>
+
+  <section id="screen-end" hidden>
+    <div class="result-card">
+      <div id="result-emoji" style="font-size:48px;"></div>
+      <div id="result-score" style="font-size:36px;font-weight:800;margin:6px 0;"></div>
+      <div id="result-grade" style="font-size:17px;font-weight:600;color:var(--accent);"></div>
+    </div>
+    <div id="mistakes"></div>
+    <button class="primary" id="btn-again">Пройти ещё раз</button>
+    <button class="secondary" id="btn-drill" hidden>Тренировать ошибки</button>
+    <button class="secondary" id="btn-home">К правилам</button>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+// [Наст., Аорист, Буд.сов., перевод, подсказка-правило, ложные_аористы]
+const ITEMS = [
+  ["τελειώνω","τελείωσα","θα τελειώσω","заканчивать","-νω → -σα",["τελείωξα","τελείωψα","έτελειωσα"]],
+  ["ανοίγω","άνοιξα","θα ανοίξω","открывать","-γω → -ξα",["άνοισα","άνοιψα","ανοίγησα"]],
+  ["βάφω","έβαψα","θα βάψω","красить","-φω → -ψα + έ-",["έβασα","έβαξα","βάφησα"]],
+  ["παντρεύω","πάντρεψα","θα παντρέψω","женить","-εύω → -εψα",["πάντρεσα","πάντρεξα","παντρεύησα"]],
+  ["ντύνω","έντυσα","θα ντύσω","одевать","-νω → -σα + έ-",["έντυξα","έντυψα","ντύσα"]],
+  ["διαβάζω","διάβασα","θα διαβάσω","читать","-ζω → -σα",["διάβαξα","διάβαψα","εδιάβασα"]],
+  ["αγοράζω","αγόρασα","θα αγοράσω","покупать","-ζω → -σα",["αγόραξα","αγόραψα","αγοράσησα"]],
+  ["αλλάζω","άλλαξα","θα αλλάξω","менять","исключение на -ζω → -ξα",["άλλασα","άλλαψα","αλλάξησα"]],
+  ["ανάβω","άναψα","θα ανάψω","включать, зажигать","-βω → -ψα",["άνασα","άναξα","έναψα"]],
+  ["ανακατεύω","ανακάτεψα","θα ανακατέψω","перемешивать","-εύω → -εψα",["ανακάτεσα","ανακάτεξα","ανακατεύσα"]],
+  ["ανεβαίνω","ανέβηκα","θα ανέβω","подниматься","неправильный: ανέβηκα / θα ανέβω",["ανέβασα","ανέβαιξα","ανεβαίνησα"]],
+  ["αρρωσταίνω","αρρώστησα","θα αρρωστήσω","заболевать","основа на -ησα",["αρρώστανα","αρρώστηξα","αρρώσταιψα"]],
+  ["βάζω","έβαλα","θα βάλω","ставить, класть","неправильный: έβαλα / θα βάλω",["έβασα","έβαξα","βάλησα"]],
+  ["βγάζω","έβγαλα","θα βγάλω","вытаскивать","неправильный: έβγαλα / θα βγάλω",["έβγασα","έβγαξα","βγάλησα"]],
+  ["βγαίνω","βγήκα","θα βγω","выходить","неправильный: βγήκα / θα βγω",["έβγηκα","έβγαισα","βγαίνησα"]],
+  ["βλέπω","είδα","θα δω","видеть, смотреть","супплетивный корень: είδα / θα δω",["έβλεψα","έβλεσα","βλέπησα"]],
+  ["βρίσκω","βρήκα","θα βρω","находить","неправильный: βρήκα / θα βρω",["έβρισκα","έβριξα","βρίσκησα"]],
+  ["γκρινιάζω","γκρίνιαξα","θα γκρινιάξω","ругаться, ворчать","-ζω → -ξα",["γκρίνιασα","γκρίνιαψα","γκρινιάζησα"]],
+  ["δίνω","έδωσα","θα δώσω","давать","неправильный: έδωσα / θα δώσω",["έδισα","έδινα","δίνησα"]],
+  ["επαναλαμβάνω","επανέλαβα","θα επαναλάβω","повторять","неправильный: επανέλαβα / θα επαναλάβω",["επαναλάμβασα","επανέλαψα","επαναλάβησα"]],
+  ["ζεσταίνω","ζέστανα","θα ζεστάνω","согревать, греть","-αίνω → -ανα",["ζέστασα","ζέσταξα","ζεσταίνησα"]],
+  ["κάνω","έκανα","θα κάνω","делать","особый: έκανα / θα κάνω",["έκασα","έκαξα","κάνησα"]],
+  ["καταλαβαίνω","κατάλαβα","θα καταλάβω","понимать","неправильный: κατάλαβα / θα καταλάβω",["καταλάβασα","κατάλαψα","καταλάβησα"]],
+  ["κατεβαίνω","κατέβηκα","θα κατέβω","спускаться","неправильный: κατέβηκα / θα κατέβω",["κατέβασα","κατέβαιξα","κατεβαίνησα"]],
+  ["κοιτάζω","κοίταξα","θα κοιτάξω","смотреть","-ζω → -ξα",["κοίτασα","κοίταψα","κοιτάζησα"]],
+  ["μαθαίνω","έμαθα","θα μάθω","учить","неправильный: έμαθα / θα μάθω",["μάθησα","έμασα","έμαξα"]],
+  ["μένω","έμεινα","θα μείνω","жить, оставаться","-ένω → έμεινα / θα μείνω",["έμεσα","έμενα","μένησα"]],
+  ["μπαίνω","μπήκα","θα μπω","входить","неправильный: μπήκα / θα μπω",["έμπηκα","έμπαισα","μπαίνησα"]],
+  ["παίζω","έπαιξα","θα παίξω","играть","-ζω → -ξα + έ-",["έπαισα","έπαιψα","παίξησα"]],
+  ["παίρνω","πήρα","θα πάρω","брать, получать","неправильный: πήρα / θα πάρω",["έπαιρσα","έπηρα","παίρνησα"]],
+  ["παραγγέλνω","παράγγειλα","θα παραγγείλω","заказывать","-έλνω → -ειλα",["παράγγελσα","παράγγελξα","παραγγέλησα"]],
+  ["πειράζω","πείραξα","θα πειράξω","обижать, беспокоить","-ζω → -ξα",["πείρασα","πείραψα","πειράζησα"]],
+  ["περιμένω","περίμενα","θα περιμένω","ждать","особый: περίμενα / θα περιμένω",["περίμεσα","περίμεινα","περιμένησα"]],
+  ["πέφτω","έπεσα","θα πέσω","падать","неправильный: έπεσα / θα πέσω",["έπεψα","έπεξα","πέφτησα"]],
+  ["πηγαίνω (πάω)","πήγα","θα πάω","идти, ехать","неправильный: πήγα / θα πάω",["πήγαισα","έπηγα","πάησα"]],
+  ["πίνω","ήπια","θα πιω","пить","неправильный: ήπια / θα πιω",["έπισα","έπινα","πίνησα"]],
+  ["πλένω","έπλυνα","θα πλύνω","мыть, стирать","-ένω → έπλυνα / θα πλύνω",["έπλεσα","έπλεξα","πλένησα"]],
+  ["σημαίνω","σήμανα","θα σημάνω","означать","-αίνω → -ανα",["σήμασα","σήμαξα","σημαίνησα"]],
+  ["στέλνω","έστειλα","θα στείλω","посылать, отправлять","-έλνω → έστειλα / θα στείλω",["έστελσα","έστελξα","στέλνησα"]],
+  ["φέρνω","έφερα","θα φέρω","приносить","неправильный: έφερα / θα φέρω",["έφερσα","έφερξα","φέρνησα"]],
+  ["φεύγω","έφυγα","θα φύγω","уходить, уезжать","неправильный: έφυγα / θα φύγω",["έφευξα","έφευσα","φεύγησα"]],
+  ["φωνάζω","φώναξα","θα φωνάξω","кричать, звать","-ζω → -ξα",["φώνασα","φώναψα","φωνάζησα"]],
+  ["λέω","είπα","θα πω","говорить","супплетивный корень: είπα / θα πω",["έλεξα","έλεσα","λέησα"]],
+  ["τρώω","έφαγα","θα φάω","кушать, есть","супплетивный корень: έφαγα / θα φάω",["έτρωσα","έτρωξα","τρώησα"]],
+  ["ακούω","άκουσα","θα ακούσω","слушать, слышать","слитный: άκουσα / θα ακούσω",["άκουξα","άκουψα","έκουσα"]],
+  ["κλαίω","έκλαψα","θα κλάψω","плакать","слитный: έκλαψα / θα κλάψω",["έκλασα","έκλαξα","κλαίησα"]],
+  ["καίω","έκαψα","θα κάψω","гореть, жечь","слитный: έκαψα / θα κάψω",["έκασα","έκαξα","καίησα"]],
+  ["φταίω","έφταιξα","θα φταίξω","быть виноватым","слитный: έφταιξα / θα φταίξω",["έφταισα","έφταιψα","φταίησα"]],
+  ["νικώ","νίκησα","θα νικήσω","побеждать","2 спр. Β1: -ώ → -ησα",["νίκασα","ένικησα","νίκαξα"]],
+  ["αγαπώ","αγάπησα","θα αγαπήσω","любить","2 спр. Β1: -ώ → -ησα",["αγάπασα","αγάπηξα","αγαπούσα"]],
+  ["γελώ","γέλασα","θα γελάσω","смеяться","2 спр. Β1: -ώ → -ασα",["γέλησα","γέλαξα","γελούσα"]],
+  ["διψώ","δίψασα","θα διψάσω","хотеть пить","2 спр. Β1: -ώ → -ασα",["δίψησα","δίψαξα","διψούσα"]],
+  ["κερνώ","κέρασα","θα κεράσω","угощать","2 спр. Β1: κερνώ → κέρασα",["κέρνησα","κέρνασα","κερνούσα"]],
+  ["ξεχνώ","ξέχασα","θα ξεχάσω","забывать","2 спр. Β1: ξεχνώ → ξέχασα",["ξέχνησα","ξέχνασα","ξεχνούσα"]],
+  ["παρακαλώ","παρακάλεσα","θα παρακαλέσω","просить, умолять","2 спр.: -ώ → -εσα",["παρακάλησα","παρακάλασα","παρακαλούσα"]],
+  ["πεινώ","πείνασα","θα πεινάσω","голодать","2 спр. Β1: -ώ → -ασα",["πείνησα","πείναξα","πεινούσα"]],
+  ["περνώ","πέρασα","θα περάσω","проходить, проводить","2 спр. Β1: περνώ → πέρασα",["πέρνησα","πέρνασα","περνούσα"]],
+  ["πετώ","πέταξα","θα πετάξω","летать, бросать","2 спр. Β1: πετώ → πέταξα",["πέτησα","πέτασα","πετούσα"]],
+  ["πηδώ","πήδηξα","θα πηδήξω","прыгать","2 спр. Β1: πηδώ → πήδηξα",["πήδησα","πήδασα","πηδούσα"]],
+  ["φορώ","φόρεσα","θα φορέσω","носить, надевать","2 спр.: φορώ → φόρεσα",["φόρησα","φόρασα","φορούσα"]],
+  ["φυσώ","φύσηξα","θα φυσήξω","дуть","2 спр. Β1: φυσώ → φύσηξα",["φύσησα","φύσασα","φυσούσα"]],
+  ["χαλώ","χάλασα","θα χαλάσω","ломать, портить","2 спр. Β1: χαλώ → χάλασα",["χάλησα","χάλαξα","χαλούσα"]],
+  ["μπορώ","μπόρεσα","θα μπορέσω","мочь","2 спр. Β2: μπορώ → μπόρεσα",["μπόρησα","μπόρασα","μπορούσα"]]
+];
+
+const $ = (id) => document.getElementById(id);
+let state = null;
+let nextTimeout = null;
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuestions() {
+  return shuffle([...ITEMS]).map((item) => {
+    const [pres, aor, fut, ru, rule, wrongAors] = item;
+    const askFut = Math.random() < 0.35;
+    if (!askFut) {
+      return {
+        tag: "Αόριστος (что сделал?)",
+        label: "Выбери правильную форму Αόριστος (εγώ):",
+        word: pres,
+        sub: ru,
+        correct: aor,
+        opts: shuffle([aor, ...wrongAors]),
+        explain: pres + " → " + aor + " / " + fut + " (" + rule + ")"
+      };
+    } else {
+      const wrongFuts = wrongAors.map((w) => "θα " + w.replace(/^έ/, "").replace(/α$/, "ω"));
+      const uniq = [...new Set([fut, ...wrongFuts])];
+      while (uniq.length < 4) uniq.push("θα " + pres);
+      return {
+        tag: "Μέλλοντας Απλός (что сделаю?)",
+        label: "Выбери будущее совершенного вида (εγώ):",
+        word: pres + " (аорист: " + aor + ")",
+        sub: ru,
+        correct: fut,
+        opts: shuffle(uniq.slice(0, 4)),
+        explain: pres + " → " + aor + " → " + fut + " (" + rule + ")"
+      };
+    }
+  });
+}
+
+function show(name) {
+  $("screen-start").hidden = (name !== "start");
+  $("screen-quiz").hidden = (name !== "quiz");
+  $("screen-end").hidden = (name !== "end");
+}
+
+function startGame(customQs) {
+  state = {
+    questions: customQs ? shuffle([...customQs]) : buildQuestions(),
+    idx: 0,
+    score: 0,
+    mistakes: [],
+    locked: false
+  };
+  show("quiz");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = state.questions[state.idx];
+  state.locked = false;
+  $("progress").textContent = (state.idx + 1) + " / " + state.questions.length;
+  $("score-ok").textContent = state.score;
+  $("score-bad").textContent = state.mistakes.length;
+  $("bar-fill").style.width = (state.idx / state.questions.length * 100) + "%";
+  $("feedback").textContent = "";
+  $("feedback").className = "";
+
+  $("q-tag").textContent = q.tag;
+  $("q-label").textContent = q.label;
+  $("q-word").textContent = q.word;
+  $("q-sub").textContent = q.sub;
+
+  const box = $("options");
+  box.innerHTML = "";
+  for (const opt of q.opts) {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = opt;
+    b.addEventListener("click", () => answer(b, opt));
+    box.appendChild(b);
+  }
+}
+
+function answer(btn, opt) {
+  if (state.locked) return;
+  state.locked = true;
+  const q = state.questions[state.idx];
+  const ok = opt === q.correct;
+
+  for (const b of $("options").children) {
+    b.disabled = true;
+    if (b.textContent === q.correct) b.classList.add("correct");
+  }
+  if (ok) {
+    state.score++;
+    $("score-ok").textContent = state.score;
+    $("feedback").textContent = "Σωστά! ✔ " + q.explain;
+    $("feedback").className = "ok";
+  } else {
+    btn.classList.add("wrong");
+    state.mistakes.push(q);
+    $("score-bad").textContent = state.mistakes.length;
+    $("feedback").textContent = q.explain;
+    $("feedback").className = "bad";
+    if (navigator.vibrate) navigator.vibrate(70);
+  }
+
+  nextTimeout = setTimeout(() => {
+    state.idx++;
+    if (state.idx >= state.questions.length) finish();
+    else renderQuestion();
+  }, ok ? 750 : 1800);
+}
+
+function finish() {
+  clearTimeout(nextTimeout);
+  const total = Math.max(1, state.score + state.mistakes.length);
+  const pct = Math.round(state.score / total * 100);
+  $("result-emoji").textContent = pct >= 85 ? "🏆" : pct >= 65 ? "🎉" : "💪";
+  $("result-score").textContent = state.score + " / " + total;
+  $("result-grade").textContent = "Точность: " + pct + "%";
+
+  const m = $("mistakes");
+  m.innerHTML = "";
+  if (state.mistakes.length) {
+    const h = document.createElement("h3");
+    h.style.fontSize = "16px";
+    h.textContent = "Повтори формы (" + state.mistakes.length + "):";
+    m.appendChild(h);
+    for (const q of state.mistakes) {
+      const d = document.createElement("div");
+      d.className = "mistake-row";
+      d.textContent = q.explain;
+      m.appendChild(d);
+    }
+  }
+  const drill = $("btn-drill");
+  drill.hidden = state.mistakes.length === 0;
+  drill.textContent = "Тренировать ошибки (" + state.mistakes.length + ")";
+  show("end");
+}
+
+$("btn-start").addEventListener("click", () => startGame(null));
+$("btn-finish").addEventListener("click", finish);
+$("btn-again").addEventListener("click", () => startGame(null));
+$("btn-drill").addEventListener("click", () => startGame(state.mistakes));
+$("btn-home").addEventListener("click", () => show("start"));
+</script>
+</body>
+</html>

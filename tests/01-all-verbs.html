@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Все 196 глаголов — без таймера</title>
+<style>
+  :root {
+    --accent: #4f46e5;
+    --accent-soft: #eef2ff;
+    --ok: #16a34a;
+    --ok-soft: #dcfce7;
+    --bad: #dc2626;
+    --bad-soft: #fee2e2;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --bg: #f3f4f6;
+    --border: #e5e7eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --accent: #818cf8;
+      --accent-soft: #312e81;
+      --ok: #4ade80;
+      --ok-soft: #14532d;
+      --bad: #f87171;
+      --bad-soft: #7f1d1d;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --card: #1f2937;
+      --bg: #111827;
+      --border: #374151;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+  }
+  #app {
+    width: 100%;
+    max-width: 560px;
+    padding: 14px 16px calc(20px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+  section[hidden] { display: none !important; }
+  .top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .back-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  h1 { font-size: 25px; margin: 12px 0 4px; text-align: center; }
+  h2 { font-size: 16px; font-weight: 500; margin: 0 0 16px; text-align: center; color: var(--muted); }
+
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .chip.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  button {
+    font-family: inherit;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .primary {
+    width: 100%;
+    padding: 17px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    margin-top: 8px;
+  }
+  .secondary {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-top: 8px;
+  }
+
+  header.quiz {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .score-box { display: flex; gap: 12px; font-weight: 700; font-size: 16px; }
+  .score-ok { color: var(--ok); }
+  .score-bad { color: var(--bad); }
+  #progress { color: var(--muted); font-size: 15px; font-weight: 600; }
+
+  .bar { height: 6px; border-radius: 3px; background: var(--accent-soft); overflow: hidden; }
+  #bar-fill { height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+
+  #q-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 24px 18px;
+    text-align: center;
+    margin: 14px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  #q-cat {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 4px 10px;
+    border-radius: 99px;
+    margin-bottom: 8px;
+  }
+  #q-label { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  #q-word { font-size: 36px; font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; }
+  #q-word.ru { font-size: 27px; }
+
+  #options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    padding: 16px 14px;
+    font-size: 18px;
+    font-weight: 600;
+    background: var(--card);
+    color: var(--text);
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    text-align: center;
+    min-height: 54px;
+  }
+  .opt.greek { font-size: 21px; }
+  .opt.correct { background: var(--ok-soft); color: var(--ok); outline: 2px solid var(--ok); }
+  .opt.wrong { background: var(--bad-soft); color: var(--bad); outline: 2px solid var(--bad); }
+
+  #feedback {
+    min-height: 44px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    padding-top: 10px;
+    color: var(--muted);
+  }
+  #feedback.ok { color: var(--ok); }
+  #feedback.bad { color: var(--bad); }
+
+  .quiz-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 12px;
+  }
+  .link-btn {
+    background: none;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 8px;
+    text-decoration: underline;
+  }
+
+  .result-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 24px 18px;
+    text-align: center;
+    margin: 16px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  #result-emoji { font-size: 48px; }
+  #result-score { font-size: 36px; font-weight: 800; margin: 6px 0; }
+  #result-grade { font-size: 17px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+  #result-extra { color: var(--muted); font-size: 14px; }
+
+  .mistake-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 11px 14px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  }
+  .mistake-row .gr { font-weight: 700; }
+  .mistake-row .ru { color: var(--muted); text-align: right; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top-nav">
+    <a class="back-link" href="index.html">← Все тесты</a>
+    <span style="font-size:13px;color:var(--muted);">Без таймера</span>
+  </div>
+
+  <!-- ЭКРАН СТАРТА -->
+  <section id="screen-start">
+    <h1>Все 196 глаголов 🇬🇷</h1>
+    <h2>Полная проверка словаря без ограничения времени</h2>
+
+    <div class="card">
+      <div class="card-title">Категория глаголов</div>
+      <div class="chips" id="cat-chips">
+        <button class="chip active" data-cat="all">Все глаголы (196)</button>
+        <button class="chip" data-cat="A">1 спряжение (118)</button>
+        <button class="chip" data-cat="C">Слитные (6)</button>
+        <button class="chip" data-cat="B1">2 спряжение Β1 -ώ/-άω (37)</button>
+        <button class="chip" data-cat="B2">2 спряжение Β2 -ώ/-είς (35)</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Направление перевода</div>
+      <div class="chips" id="dir-chips">
+        <button class="chip active" data-dir="mix">↔️ В обе стороны</button>
+        <button class="chip" data-dir="gr2ru">🇬🇷 → 🇷🇺 На русский</button>
+        <button class="chip" data-dir="ru2gr">🇷🇺 → 🇬🇷 На греческий</button>
+      </div>
+    </div>
+
+    <button class="primary" id="btn-start">Начать проверку</button>
+    <button class="secondary" id="btn-resume" hidden>Продолжить сохранённый прогон</button>
+  </section>
+
+  <!-- ЭКРАН ТЕСТА -->
+  <section id="screen-quiz" hidden style="display:flex;flex-direction:column;flex:1;">
+    <header class="quiz">
+      <div id="progress">1 / 196</div>
+      <div class="score-box">
+        <span class="score-ok">✔ <span id="score-ok">0</span></span>
+        <span class="score-bad">✖ <span id="score-bad">0</span></span>
+      </div>
+    </header>
+    <div class="bar"><div id="bar-fill"></div></div>
+    <div id="q-card">
+      <div id="q-cat"></div>
+      <div id="q-label"></div>
+      <div id="q-word"></div>
+    </div>
+    <div id="options"></div>
+    <div id="feedback"></div>
+    <div class="quiz-footer">
+      <button class="link-btn" id="btn-save-exit">пауза (сохранить)</button>
+      <button class="link-btn" id="btn-finish">завершить и посмотреть итог</button>
+    </div>
+  </section>
+
+  <!-- ЭКРАН РЕЗУЛЬТАТА -->
+  <section id="screen-end" hidden>
+    <div class="result-card">
+      <div id="result-emoji"></div>
+      <div id="result-score"></div>
+      <div id="result-grade"></div>
+      <div id="result-extra"></div>
+    </div>
+    <div id="mistakes"></div>
+    <button class="primary" id="btn-again">Пройти заново</button>
+    <button class="secondary" id="btn-drill" hidden>Тренировать ошибки</button>
+    <button class="secondary" id="btn-home">К настройкам</button>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+// [греческий, русский, категория]
+const VERBS = [
+// 1 спряжение (A) — 118
+["αγοράζω","покупать","A"],["αλλάζω","менять","A"],["ανάβω","включать, зажигать","A"],["ανακατεύω","перемешивать","A"],
+["ανεβαίνω","подниматься","A"],["ανοίγω","открывать, включать","A"],["απλώνω","протягивать","A"],["αποφασίζω","решать","A"],
+["αρέσω","нравиться","A"],["αρρωσταίνω","заболевать","A"],["αρχίζω","начинать","A"],["αφήνω","оставлять, покидать","A"],
+["βάζω","ставить, класть","A"],["βγάζω","вытаскивать","A"],["βγαίνω","выходить","A"],["βήχω","кашлять","A"],
+["βλέπω","видеть","A"],["βρέχει","идёт дождь","A"],["βρίσκω","находить","A"],["γεμίζω","наполнять","A"],
+["γιορτάζω","праздновать","A"],["γκρινιάζω","ругаться","A"],["γνωρίζω","узнавать","A"],["γράφω","писать","A"],
+["γυρίζω","возвращаться","A"],["δανείζω","занимать, давать взаймы","A"],["δείχνω","показывать","A"],["διαβάζω","читать","A"],
+["διασκεδάζω","развлекаться","A"],["διαφημίζω","рекламировать","A"],["διδάσκω","преподавать","A"],["δίνω","давать","A"],
+["δοκιμάζω","пробовать, примерять","A"],["δουλεύω","работать","A"],["εξετάζω","изучать","A"],["ελπίζω","надеяться","A"],
+["επαναλαμβάνω","повторять","A"],["ετοιμάζω","готовить, собирать","A"],["έχω","иметь","A"],["ζεσταίνω","согревать, греть","A"],
+["ζωγραφίζω","рисовать","A"],["θέλω","хотеть","A"],["θυμώνω","сердиться","A"],["καθαρίζω","чистить, убирать","A"],
+["καλυτερεύω","улучшать","A"],["κάνω","делать","A"],["καπνίζω","курить","A"],["καταλαβαίνω","понимать","A"],
+["κατεβαίνω","спускаться","A"],["κερδίζω","выигрывать, зарабатывать","A"],["κλείνω","закрывать","A"],["κλίνω","склонять","A"],
+["κόβω","резать","A"],["κοιτάζω","смотреть","A"],["κοκκινίζω","краснеть","A"],["κρύβω","прятать","A"],
+["κρυώνω","мёрзнуть","A"],["λείπω","не хватать, отсутствовать","A"],["λερώνω","пачкать","A"],["λούζω","купать","A"],
+["μαγειρεύω","готовить еду","A"],["μαζεύω","собирать","A"],["μαθαίνω","учить, изучать","A"],["μαυρίζω","загорать","A"],
+["μεγαλώνω","расти, вырастать","A"],["μένω","жить, оставаться","A"],["μεταφράζω","переводить","A"],["μοιάζω","быть похожим","A"],
+["μορφώνω","давать образование","A"],["μπαίνω","входить","A"],["νιώθω","чувствовать","A"],["νοικιάζω","снимать, нанимать","A"],
+["νομίζω","думать, считать","A"],["ντύνω","надевать","A"],["ξέρω","знать, уметь","A"],["ξημερώνει","рассветать","A"],
+["παίζω","играть","A"],["παίρνω","брать, получать","A"],["παραγγέλνω","заказывать","A"],["πειράζω","обижать, беспокоить","A"],
+["περιμένω","ждать","A"],["πέφτω","падать","A"],["πηγαίνω / πάω","идти, ехать","A"],["πίνω","пить","A"],
+["πιστεύω","верить","A"],["πλένω","мыть, стирать","A"],["πληρώνω","платить","A"],["πρέπει","надо, должен","A"],
+["προσέχω","обращать внимание","A"],["ρίχνω","бросать","A"],["σβήνω","выключать, гасить","A"],["σηκώνω","поднимать","A"],
+["σημαίνω","означать","A"],["σιδερώνω","гладить (бельё)","A"],["σπουδάζω","учиться (в вузе)","A"],["στέλνω","посылать, отправлять","A"],
+["στρίβω","поворачивать","A"],["στρώνω","стелить, накрывать (стол)","A"],["συμβαίνει","случаться, происходить","A"],["συμπληρώνω","дополнять, заполнять","A"],
+["συνεχίζω","продолжать","A"],["σχηματίζω","составлять","A"],["ταξιδεύω","путешествовать","A"],["τελειώνω","заканчивать","A"],
+["τηγανίζω","жарить","A"],["τρέχω","бежать","A"],["υπάρχει","существовать, иметься","A"],["φέρνω","приносить, привозить","A"],
+["φεύγω","уходить, уезжать","A"],["φτάνω","прибывать","A"],["φτιάχνω","мастерить, изготовлять","A"],["φωνάζω","кричать, звать","A"],
+["χάνω","терять","A"],["χορεύω","танцевать","A"],["χτενίζω","причёсывать","A"],["χωρίζω","разделять, разводиться","A"],
+["ψάχνω","искать","A"],["ψωνίζω","покупать (продукты)","A"],
+// Слитные (C) — 6
+["λέω","говорить","C"],["τρώω","кушать, есть","C"],["ακούω","слушать, слышать","C"],["κλαίω","плакать","C"],
+["καίω","гореть, жечь","C"],["φταίω","быть виноватым","C"],
+// 2 спряжение Β1 — 37
+["αγαπώ","любить","B1"],["απαντώ","отвечать","B1"],["βοηθώ","помогать","B1"],["γελώ","смеяться","B1"],
+["γεννώ","рождать","B1"],["διψώ","хотеть пить","B1"],["ζητώ","просить","B1"],["κερνώ","угощать","B1"],
+["κολυμπώ","плавать","B1"],["κουνώ","качать, кивать","B1"],["κοιτώ","смотреть","B1"],["κρατώ","держать","B1"],
+["μελετώ","изучать (углублённо)","B1"],["μιλώ","разговаривать","B1"],["νικώ","побеждать","B1"],["ξεχνώ","забывать","B1"],
+["ξυπνώ","просыпаться, будить","B1"],["παρακαλώ","умолять, просить","B1"],["πεινώ","голодать","B1"],["περνώ","проходить, проводить (время)","B1"],
+["περπατώ","ходить пешком","B1"],["πετώ","летать, бросать","B1"],["πηδώ","прыгать","B1"],["πουλώ","продавать","B1"],
+["προτιμώ","предпочитать","B1"],["ρωτώ","спрашивать","B1"],["σταματώ","останавливать(ся)","B1"],["συζητώ","обсуждать","B1"],
+["συναντώ","встречать","B1"],["τραγουδώ","петь","B1"],["φιλώ","целовать","B1"],["φορώ","носить, надевать","B1"],
+["φυσώ","дуть","B1"],["χαιρετώ","приветствовать","B1"],["χαλώ","ломать, портить","B1"],["χτυπώ","бить, стучать","B1"],
+["χαμογελώ","улыбаться","B1"],
+// 2 спряжение Β2 — 35
+["αδιαφορώ","быть безразличным","B2"],["ακολουθώ","следовать","B2"],["ανησυχώ","беспокоиться, волноваться","B2"],["αποτελώ","составлять, являться","B2"],
+["αργώ","опаздывать","B2"],["δημιουργώ","создавать","B2"],["διαρκώ","длиться","B2"],["διαφωνώ","не соглашаться","B2"],
+["εκτελώ","выполнять","B2"],["ενοχλώ","беспокоить, мешать","B2"],["επαινώ","хвалить","B2"],["επικοινωνώ","общаться","B2"],
+["εξηγώ","объяснять","B2"],["ευχαριστώ","благодарить","B2"],["θεωρώ","считать, полагать","B2"],["καλλιεργώ","возделывать","B2"],
+["καλώ","звать, приглашать","B2"],["κατοικώ","проживать","B2"],["κληρονομώ","наследовать","B2"],["λειτουργώ","функционировать","B2"],
+["μισώ","ненавидеть","B2"],["μπορώ","мочь","B2"],["νοσταλγώ","тосковать","B2"],["οδηγώ","вести (машину)","B2"],
+["παρακολουθώ","наблюдать, следить","B2"],["παρατηρώ","замечать","B2"],["πληροφορώ","информировать","B2"],["προσπαθώ","стараться, пытаться","B2"],
+["προχωρώ","продвигаться","B2"],["συγχωρώ","прощать","B2"],["συμπαθώ","симпатизировать","B2"],["συμφωνώ","соглашаться","B2"],
+["τηλεφωνώ","звонить (по телефону)","B2"],["τιμωρώ","наказывать","B2"],["χρησιμοποιώ","использовать","B2"]
+];
+
+const CAT_LABELS = {
+  A: "1 спряжение (-ω)",
+  C: "Слитный глагол",
+  B1: "2 спряжение Β1 (-ώ/-άω)",
+  B2: "2 спряжение Β2 (-ώ/-είς)"
+};
+
+const SAVE_KEY = "greek-all-verbs-saved-v1";
+const $ = (id) => document.getElementById(id);
+const norm = (s) => s.toLowerCase().replace(/\s+/g, " ").trim();
+
+let selectedCat = "all";
+let selectedDir = "mix";
+let state = null;
+let nextTimeout = null;
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function show(name) {
+  $("screen-start").hidden = (name !== "start");
+  $("screen-quiz").hidden = (name !== "quiz");
+  $("screen-end").hidden = (name !== "end");
+}
+
+function setupChips(containerId, cb) {
+  const box = $(containerId);
+  box.addEventListener("click", (e) => {
+    const btn = e.target.closest(".chip");
+    if (!btn) return;
+    for (const c of box.children) c.classList.remove("active");
+    btn.classList.add("active");
+    cb(btn);
+  });
+}
+setupChips("cat-chips", (b) => { selectedCat = b.dataset.cat; });
+setupChips("dir-chips", (b) => { selectedDir = b.dataset.dir; });
+
+function buildQuestions(customList) {
+  const ruCount = {};
+  for (const [, ru] of VERBS) {
+    const k = norm(ru);
+    ruCount[k] = (ruCount[k] || 0) + 1;
+  }
+  const filtered = customList
+    ? [...customList]
+    : VERBS.filter((v) => selectedCat === "all" || v[2] === selectedCat);
+
+  const pool = shuffle(filtered);
+  return pool.map((verb) => {
+    const ruUnique = ruCount[norm(verb[1])] === 1;
+    let dir = selectedDir;
+    if (dir === "mix") dir = (ruUnique && Math.random() < 0.5) ? "ru2gr" : "gr2ru";
+    if (dir === "ru2gr" && !ruUnique) dir = "gr2ru";
+
+    const correct = dir === "gr2ru" ? verb[1] : verb[0];
+    const others = shuffle(VERBS.filter((v) => v !== verb));
+    const opts = [correct];
+    for (const o of others) {
+      if (opts.length >= 4) break;
+      const cand = dir === "gr2ru" ? o[1] : o[0];
+      if (opts.some((x) => norm(x) === norm(cand))) continue;
+      opts.push(cand);
+    }
+    return { verb, dir, correct, opts: shuffle(opts) };
+  });
+}
+
+function startGame(customList) {
+  state = {
+    questions: buildQuestions(customList),
+    idx: 0,
+    score: 0,
+    mistakes: [],
+    locked: false
+  };
+  localStorage.removeItem(SAVE_KEY);
+  show("quiz");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = state.questions[state.idx];
+  state.locked = false;
+  $("progress").textContent = (state.idx + 1) + " / " + state.questions.length;
+  $("score-ok").textContent = state.score;
+  $("score-bad").textContent = state.mistakes.length;
+  $("bar-fill").style.width = (state.idx / state.questions.length * 100) + "%";
+  $("feedback").textContent = "";
+  $("feedback").className = "";
+
+  const isGr = q.dir === "gr2ru";
+  $("q-cat").textContent = CAT_LABELS[q.verb[2]] || "";
+  $("q-label").textContent = isGr ? "Выбери перевод:" : "Как сказать по-гречески?";
+  const w = $("q-word");
+  w.textContent = isGr ? q.verb[0] : q.verb[1];
+  w.className = isGr ? "" : "ru";
+
+  const box = $("options");
+  box.innerHTML = "";
+  for (const opt of q.opts) {
+    const b = document.createElement("button");
+    b.className = "opt" + (isGr ? "" : " greek");
+    b.textContent = opt;
+    b.addEventListener("click", () => answer(b, opt));
+    box.appendChild(b);
+  }
+}
+
+function answer(btn, opt) {
+  if (state.locked) return;
+  state.locked = true;
+
+  const q = state.questions[state.idx];
+  const correct = norm(opt) === norm(q.correct);
+  for (const b of $("options").children) {
+    b.disabled = true;
+    if (norm(b.textContent) === norm(q.correct)) b.classList.add("correct");
+  }
+  if (correct) {
+    state.score++;
+    $("score-ok").textContent = state.score;
+    $("feedback").textContent = "Σωστά! ✔";
+    $("feedback").className = "ok";
+  } else {
+    btn.classList.add("wrong");
+    state.mistakes.push(q.verb);
+    $("score-bad").textContent = state.mistakes.length;
+    $("feedback").textContent = "Правильно: " + q.verb[0] + " — " + q.verb[1];
+    $("feedback").className = "bad";
+    if (navigator.vibrate) navigator.vibrate(70);
+  }
+
+  nextTimeout = setTimeout(() => {
+    state.idx++;
+    if (state.idx >= state.questions.length) finish();
+    else {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+      renderQuestion();
+    }
+  }, correct ? 550 : 1400);
+}
+
+function finish() {
+  clearTimeout(nextTimeout);
+  localStorage.removeItem(SAVE_KEY);
+  const answered = Math.max(1, state.score + state.mistakes.length);
+  const pct = Math.round(state.score / answered * 100);
+  let emoji = "💪", grade = "Продолжай практику!";
+  if (pct >= 90) { emoji = "🏆"; grade = "Άριστα! Блестяще!"; }
+  else if (pct >= 75) { emoji = "🎉"; grade = "Πολύ καλά! Отлично!"; }
+  else if (pct >= 55) { emoji = "👍"; grade = "Καλά! Хороший результат"; }
+
+  $("result-emoji").textContent = emoji;
+  $("result-score").textContent = state.score + " / " + answered;
+  $("result-grade").textContent = grade;
+  $("result-extra").textContent = "Точность: " + pct + "% · ошибок: " + state.mistakes.length;
+
+  const m = $("mistakes");
+  m.innerHTML = "";
+  if (state.mistakes.length) {
+    const h = document.createElement("h3");
+    h.style.fontSize = "16px";
+    h.textContent = "Ошибки (" + state.mistakes.length + "):";
+    m.appendChild(h);
+    for (const [gr, ru] of state.mistakes) {
+      const row = document.createElement("div");
+      row.className = "mistake-row";
+      row.innerHTML = "<span class='gr'></span><span class='ru'></span>";
+      row.querySelector(".gr").textContent = gr;
+      row.querySelector(".ru").textContent = ru;
+      m.appendChild(row);
+    }
+  }
+
+  const drill = $("btn-drill");
+  if (state.mistakes.length) {
+    drill.hidden = false;
+    drill.textContent = "Тренировать ошибки (" + state.mistakes.length + ")";
+  } else {
+    drill.hidden = true;
+  }
+  show("end");
+}
+
+function checkResume() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  const btn = $("btn-resume");
+  if (!raw) { btn.hidden = true; return; }
+  try {
+    const saved = JSON.parse(raw);
+    if (saved && saved.questions && saved.idx < saved.questions.length) {
+      btn.hidden = false;
+      btn.textContent = "Продолжить (" + (saved.idx + 1) + " / " + saved.questions.length + ")";
+    } else btn.hidden = true;
+  } catch { btn.hidden = true; }
+}
+
+$("btn-start").addEventListener("click", () => startGame(null));
+$("btn-resume").addEventListener("click", () => {
+  const saved = JSON.parse(localStorage.getItem(SAVE_KEY));
+  if (saved) {
+    state = saved;
+    show("quiz");
+    renderQuestion();
+  }
+});
+$("btn-save-exit").addEventListener("click", () => {
+  clearTimeout(nextTimeout);
+  localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  checkResume();
+  show("start");
+});
+$("btn-finish").addEventListener("click", finish);
+$("btn-again").addEventListener("click", () => startGame(null));
+$("btn-drill").addEventListener("click", () => startGame(state.mistakes));
+$("btn-home").addEventListener("click", () => {
+  checkResume();
+  show("start");
+});
+
+checkResume();
+</script>
+</body>
+</html>

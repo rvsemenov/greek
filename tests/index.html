@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Греческие глаголы — все тесты</title>
+<style>
+  :root {
+    --text: #1f2937;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --bg: #f3f4f6;
+    --border: #e5e7eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --card: #1f2937;
+      --bg: #111827;
+      --border: #374151;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+  }
+  #app {
+    width: 100%;
+    max-width: 560px;
+    padding: 18px 16px calc(24px + env(safe-area-inset-bottom));
+  }
+  h1 { font-size: 26px; margin: 8px 0 4px; text-align: center; }
+  h2 { font-size: 15px; font-weight: 500; margin: 0 0 18px; text-align: center; color: var(--muted); }
+
+  .test-list { display: flex; flex-direction: column; gap: 12px; }
+  .test-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 18px;
+    background: var(--card);
+    color: var(--text);
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    border-left: 5px solid #4f46e5;
+  }
+  .test-card:active { transform: scale(.99); }
+  .icon {
+    font-size: 28px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(79,70,229,.1);
+    flex-shrink: 0;
+  }
+  .test-info { flex: 1; }
+  .test-title { font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+  .test-desc { font-size: 13.5px; color: var(--muted); line-height: 1.35; }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-top: 6px;
+    background: rgba(79,70,229,.12);
+    color: #4f46e5;
+  }
+  @media (prefers-color-scheme: dark) {
+    .badge { color: #a5b4fc; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>Греческие глаголы 🇬🇷</h1>
+  <h2>Все тесты по сводной таблице (без таймера)</h2>
+
+  <div class="test-list">
+    <a class="test-card" href="01-all-verbs.html" style="border-left-color:#4f46e5;">
+      <div class="icon">📚</div>
+      <div class="test-info">
+        <div class="test-title">1. Все 196 глаголов (словарь)</div>
+        <div class="test-desc">Полная проверка всех глаголов без таймера. Можно фильтровать по 1 спр., слитным, 2 спр. Β1 и Β2, сохранять паузу и тренировать ошибки.</div>
+        <span class="badge">196 глаголов · обе стороны</span>
+      </div>
+    </a>
+
+    <a class="test-card" href="02-tenses.html" style="border-left-color:#0d9488;">
+      <div class="icon">⏳</div>
+      <div class="test-info">
+        <div class="test-title">2. Пять времён глагола</div>
+        <div class="test-desc">Ενεστώτας, Παρατατικός, Αόριστος, Μέλλοντας Συνεχής и Μέλλοντας Απλός. Разница между «что делал?» и «что сделал?», маркеры времени.</div>
+        <span class="badge">5 времён · маркеры</span>
+      </div>
+    </a>
+
+    <a class="test-card" href="03-aorist-and-stems.html" style="border-left-color:#ea580c;">
+      <div class="icon">⚡</div>
+      <div class="test-info">
+        <div class="test-title">3. Аорист и Будущее (основы)</div>
+        <div class="test-desc">Правила чередования (-νω/-ζω → -σα, -γω/-χω → -ξα, -βω/-φω → -ψα, -εύω → -εψα, приращение έ-) и все неправильные глаголы таблицы.</div>
+        <span class="badge">55 глаголов с формами</span>
+      </div>
+    </a>
+
+    <a class="test-card" href="04-endings-and-conjugation.html" style="border-left-color:#7c3aed;">
+      <div class="icon">✍️</div>
+      <div class="test-info">
+        <div class="test-title">4. Личные окончания по лицам</div>
+        <div class="test-desc">Спряжение по местоимениям (εγώ, εσύ, αυτός, εμείς, εσείς, αυτοί) для 1 спр., слитных, 2 спр. Β1/Β2 и прошедшего времени. Тап или ввод вручную.</div>
+        <span class="badge">Ввод окончания + плашки</span>
+      </div>
+    </a>
+
+    <a class="test-card" href="05-phrases-in-context.html" style="border-left-color:#2563eb;">
+      <div class="icon">💬</div>
+      <div class="test-info">
+        <div class="test-title">5. Фразы и выражения из таблицы</div>
+        <div class="test-desc">Живые словосочетания из примеров: κάνω βόλτα, παίρνω τηλέφωνο, στρώνω το τραπέζι, ρίχνω ματιά, λέω ψέματα и др.</div>
+        <span class="badge">45 выражений</span>
+      </div>
+    </a>
+
+    <a class="test-card" href="../verbs-test.html" style="border-left-color:#6b7280;">
+      <div class="icon">⏱️</div>
+      <div class="test-info">
+        <div class="test-title">Блиц-тест на 10 минут</div>
+        <div class="test-desc">30 случайных вопросов на скорость с таймером и рекордом.</div>
+        <span class="badge">30 вопросов · 10:00</span>
+      </div>
+    </a>
+  </div>
+</div>
+</body>
+</html>
