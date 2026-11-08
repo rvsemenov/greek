@@ -6,6 +6,7 @@ import fastifyStatic from "@fastify/static";
 import { config } from "./config.js";
 import { getRule, listRules, listTests, itemIndex } from "./content.js";
 import { listProgress, review } from "./srs.js";
+import { compareUsers, mistakesJsonl, userStats } from "./stats.js";
 import {
   checkPin,
   createUser,
@@ -20,6 +21,10 @@ import {
 
 const COOKIE = "greek_sid";
 const YEAR_SECONDS = 365 * 24 * 60 * 60;
+
+function parseDays(raw: string | undefined): number {
+  return Math.min(Math.max(Number(raw ?? 7) || 7, 1), 365);
+}
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -146,6 +151,24 @@ export function buildApp() {
         isNew: !progress.has(item.id),
       }));
       return { items, total: candidates.length, due: due.length, new: fresh.length };
+    },
+  );
+
+  app.get<{ Querystring: { days?: string } }>("/api/stats", { preHandler: requireUser }, async (req) =>
+    userStats(req.user!.id, parseDays(req.query.days)),
+  );
+
+  app.get<{ Querystring: { days?: string } }>("/api/stats/compare", { preHandler: requireUser }, async (req) => ({
+    days: parseDays(req.query.days),
+    users: compareUsers(parseDays(req.query.days)),
+  }));
+
+  app.get<{ Querystring: { days?: string; onlyWrong?: string } }>(
+    "/api/mistakes.jsonl",
+    { preHandler: requireUser },
+    async (req, reply) => {
+      const body = mistakesJsonl(req.user!.id, parseDays(req.query.days), req.query.onlyWrong === "1");
+      return reply.type("application/x-ndjson; charset=utf-8").send(body);
     },
   );
 
