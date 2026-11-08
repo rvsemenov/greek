@@ -3,3 +3,4 @@ node_modules/
 server/dist/
 data/
 __pycache__/
+dist/
