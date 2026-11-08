@@ -387,3 +387,100 @@ label {
   font-size: 1rem;
   margin-top: 1rem;
 }
+
+.period {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.summary-row {
+  display: flex;
+  gap: 2rem;
+}
+
+.summary-row .big {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.stat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.stat-table th,
+.stat-table td {
+  padding: 0.4rem 0.3rem;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+
+.stat-table th {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.bar-cell {
+  width: 35%;
+}
+
+.bar {
+  display: block;
+  height: 8px;
+  background: var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar > span {
+  display: block;
+  height: 100%;
+  background: var(--bad);
+}
+
+.note {
+  font-size: 0.88rem;
+  margin: 0.6rem 0 0;
+}
+
+.days {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 140px;
+}
+
+.day {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+}
+
+.day > span {
+  width: 100%;
+  background: var(--accent);
+  border-radius: 6px 6px 0 0;
+  min-height: 2px;
+}
+
+.day small {
+  font-size: 0.7rem;
+}
+
+#nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

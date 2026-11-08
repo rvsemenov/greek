@@ -84,4 +84,28 @@ export const api = {
     ),
   review: (body: { itemId: string; correct: boolean; ms: number; peeked: boolean; answered: string }) =>
     request<ReviewResult>("POST", "/api/review", body),
+  stats: (days: number) => request<Stats>("GET", `/api/stats?days=${days}`),
+  compare: (days: number) =>
+    request<{ days: number; users: { display: string; name: string; total: number; right: number }[] }>(
+      "GET",
+      `/api/stats/compare?days=${days}`,
+    ),
 };
+
+export interface StatBucket {
+  key: string;
+  total: number;
+  right: number;
+  errorRate: number;
+  enough: boolean;
+}
+
+export interface Stats {
+  days: number;
+  total: number;
+  right: number;
+  errorRate: number;
+  byRule: StatBucket[];
+  byTag: StatBucket[];
+  perDay: { day: string; count: number }[];
+}
