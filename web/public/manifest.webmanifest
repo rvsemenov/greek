@@ -1,0 +1,19 @@
+{
+  "name": "Греческий",
+  "short_name": "Греческий",
+  "description": "Тренировка греческой грамматики по правилам A1–B2",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f6fa",
+  "theme_color": "#1d4ed8",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
