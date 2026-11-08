@@ -4,6 +4,7 @@ import { renderProfiles } from "./views/profiles";
 import { renderTopics } from "./views/topics";
 import { renderSession } from "./views/session";
 import { renderStats } from "./views/stats";
+import { renderSettings } from "./views/settings";
 
 const app = document.getElementById("app")!;
 const nav = document.getElementById("nav")!;
@@ -14,11 +15,14 @@ function renderNav(user: PublicUser | null) {
   const stats = document.createElement("a");
   stats.href = "#/stats";
   stats.textContent = "Статистика";
+  const settings = document.createElement("a");
+  settings.href = "#/settings";
+  settings.textContent = "Настройки";
   const who = document.createElement("a");
   who.href = "#/profiles";
   who.className = "who";
   who.textContent = user.display;
-  nav.append(stats, who);
+  nav.append(stats, settings, who);
 }
 
 async function route() {
@@ -43,6 +47,10 @@ async function route() {
   }
   if (sessionMatch) {
     await renderSession(app, decodeURIComponent(sessionMatch[1]));
+    return;
+  }
+  if (path === "#/settings") {
+    await renderSettings(app);
     return;
   }
   if (path === "#/stats") {

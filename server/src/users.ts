@@ -36,7 +36,7 @@ export function validPin(pin: unknown): pin is string {
   return typeof pin === "string" && PIN_RE.test(pin);
 }
 
-async function hashPin(pin: string): Promise<string> {
+export async function hashPin(pin: string): Promise<string> {
   const salt = randomBytes(16);
   const key = await scrypt(pin, salt, 32);
   return `scrypt$${salt.toString("hex")}$${key.toString("hex")}`;
@@ -49,6 +49,10 @@ export async function checkPin(pin: string | undefined, stored: string | null): 
   const expected = Buffer.from(keyHex, "hex");
   const actual = await scrypt(pin, Buffer.from(saltHex, "hex"), expected.length);
   return timingSafeEqual(actual, expected);
+}
+
+export function setPinHash(userId: number, pinHash: string | null): void {
+  db.prepare("UPDATE users SET pin_hash = ? WHERE id = ?").run(pinHash, userId);
 }
 
 export function findUser(name: string): UserRow | undefined {

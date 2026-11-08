@@ -12,7 +12,9 @@ import {
   createUser,
   findUser,
   findUserById,
+  hashPin,
   listUsers,
+  setPinHash,
   toPublic,
   validName,
   validPin,
@@ -100,6 +102,24 @@ export function buildApp() {
   });
 
   app.get("/api/me", { preHandler: requireUser }, async (req) => ({ user: toPublic(req.user!) }));
+
+  // Смена PIN: если PIN уже задан, нужен текущий. Пустой pin убирает PIN.
+  app.put<{ Body: { currentPin?: unknown; pin?: unknown } }>("/api/me/pin", { preHandler: requireUser }, async (req, reply) => {
+    const user = req.user!;
+    const { currentPin, pin } = req.body ?? {};
+    const current = typeof currentPin === "string" ? currentPin : undefined;
+    if (!(await checkPin(current, user.pin_hash))) {
+      return reply.code(403).send({ error: "текущий PIN неверный" });
+    }
+    if (pin === undefined || pin === null || pin === "") {
+      setPinHash(user.id, null);
+    } else if (validPin(pin)) {
+      setPinHash(user.id, await hashPin(pin));
+    } else {
+      return reply.code(400).send({ error: "новый PIN — ровно 4 цифры или пусто" });
+    }
+    return { user: toPublic(findUserById(user.id)!) };
+  });
 
   app.get("/api/content/rules", async () => {
     const rules = await listRules();

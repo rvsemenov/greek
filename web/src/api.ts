@@ -74,6 +74,8 @@ export const api = {
   login: (name: string, pin: string) =>
     request<{ user: PublicUser }>("POST", "/api/session", { name, pin }),
   logout: () => request<{ ok: true }>("POST", "/api/session/logout"),
+  setPin: (currentPin: string, pin: string) =>
+    request<{ user: PublicUser }>("PUT", "/api/me/pin", { currentPin, pin }),
   rules: () => request<{ rules: RuleMeta[] }>("GET", "/api/content/rules"),
   tests: () => request<{ tests: TestSummary[] }>("GET", "/api/content/tests"),
   rule: (id: string) => request<RuleMeta & { body: string }>("GET", `/api/content/rules/${id}`),
