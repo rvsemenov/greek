@@ -74,7 +74,7 @@ def check_greek_text(where, text, errors, warnings):
             continue
         if "ς" in letters[:-1]:
             errors.append(f"{where}: ς не в конце слова: {w!r}")
-        if letters[-1] == "σ":
+        if letters[-1] == "σ" and not w.endswith(("'", "’")):
             errors.append(f"{where}: σ в конце слова вместо ς: {w!r}")
         if letters.isupper() or letters.lower() in NO_ACCENT_OK or "-" in w:
             continue
