@@ -70,7 +70,7 @@ def check_greek_text(where, text, errors, warnings):
         if GREEK.search(w) and (LATIN.search(w) or CYRILLIC.search(w)):
             errors.append(f"{where}: смешение алфавитов в слове {w!r}")
         letters = re.sub(r"[^\wͰ-Ͽἀ-῿]", "", w)
-        if not letters or not GREEK.search(letters):
+        if not letters or not GREEK.search(letters) or "-" in w:
             continue
         if "ς" in letters[:-1]:
             errors.append(f"{where}: ς не в конце слова: {w!r}")
