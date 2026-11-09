@@ -126,8 +126,12 @@ function showQuestion(card: HTMLElement, state: State) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       if (state.answered) return;
-      const value = (form.elements.namedItem("answer") as HTMLInputElement).value;
-      void submit(card, state, value, false);
+      const input = form.elements.namedItem("answer") as HTMLInputElement;
+      if (!input.value.trim()) {
+        input.focus();
+        return;
+      }
+      void submit(card, state, input.value, false);
     });
   } else {
     body.innerHTML = `<p class="error">Тип «${esc(item.type)}» пока не поддерживается.</p>`;
