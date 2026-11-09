@@ -8,150 +8,315 @@
       "type": "inflect",
       "prompt": "λέω → 2 л. ед. ч. (εσύ):",
       "answer": "λες",
-      "accept": ["λες"],
+      "accept": [
+        "λες"
+      ],
       "why": "Основа λέ- на гласную сливает окончания: вместо λέεις — λες, без ударения.",
-      "words": ["λέω"],
-      "tags": ["verbs", "present", "irregular"]
+      "words": [
+        "λέω"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular"
+      ]
     },
     {
       "id": "a1-08-0002",
       "type": "choice",
       "prompt": "Μη ___ ψέματα!",
-      "options": ["λες", "λέεις", "λέει", "λέμε"],
+      "options": [
+        "λες",
+        "λέεις",
+        "λέει",
+        "λέμε"
+      ],
       "answer": "λες",
       "why": "«Μη λες ψέματα!» — «Не ври!»: 2 л. ед. ч. от λέω — λες, а не λέεις.",
-      "words": ["λέω"],
-      "tags": ["verbs", "present", "irregular", "negation"]
+      "words": [
+        "λέω"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "negation"
+      ]
     },
     {
       "id": "a1-08-0003",
       "type": "choice",
       "prompt": "Πού ___ τώρα;",
-      "options": ["πας", "πάς", "πάει", "πάμε"],
+      "options": [
+        "πας",
+        "πάς",
+        "πάει",
+        "πάμε"
+      ],
       "answer": "πας",
       "why": "Односложная форма πας пишется без ударения: «Πού πας;» — «Куда ты идёшь?». Форма πάς с ударением — неверна.",
-      "words": ["πάω", "τώρα"],
-      "tags": ["verbs", "present", "irregular", "questions"]
+      "words": [
+        "πάω",
+        "τώρα"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "questions"
+      ]
     },
     {
       "id": "a1-08-0004",
       "type": "choice",
       "prompt": "Εμείς ___ με το λεωφορείο.",
-      "options": ["πάμε", "πάνε", "πάτε", "πάω"],
+      "options": [
+        "πάμε",
+        "πάνε",
+        "πάτε",
+        "πάω"
+      ],
       "answer": "πάμε",
       "why": "Для «мы» — πάμε: глагол πάω сохраняет стандартное окончание -με.",
-      "words": ["πάω", "λεωφορείο"],
-      "tags": ["verbs", "present", "irregular", "pronouns"]
+      "words": [
+        "πάω",
+        "λεωφορείο"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "pronouns"
+      ]
     },
     {
       "id": "a1-08-0005",
       "type": "choice",
       "prompt": "Τι ___ το πρωί;",
-      "options": ["τρως", "τρώει", "τρώμε", "τρώνε"],
+      "options": [
+        "τρως",
+        "τρώει",
+        "τρώμε",
+        "τρώνε"
+      ],
       "answer": "τρως",
       "why": "Вопрос к «ты» — τρως: у τρώω основа на гласную, окончание -ς вместо -εις.",
-      "words": ["τρώω"],
-      "tags": ["verbs", "present", "irregular", "questions"]
+      "words": [
+        "τρώω"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "questions"
+      ]
     },
     {
       "id": "a1-08-0006",
       "type": "choice",
       "prompt": "Τα παιδιά ___ πολλά γλυκά.",
-      "options": ["τρώνε", "τρώουν", "τρώει", "τρώμε"],
+      "options": [
+        "τρώνε",
+        "τρώουν",
+        "τρώει",
+        "τρώμε"
+      ],
       "answer": "τρώνε",
       "why": "Для «они» у τρώω — τρώνε (сокращённое окончание -νε), а не правильное τρώουν.",
-      "words": ["τρώω", "γλυκός"],
-      "tags": ["verbs", "present", "irregular", "pronouns"]
+      "words": [
+        "τρώω",
+        "γλυκός"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "pronouns"
+      ]
     },
     {
       "id": "a1-08-0007",
       "type": "inflect",
       "prompt": "κλαίω → 3 л. ед. ч. (αυτός / αυτή):",
       "answer": "κλαίει",
-      "accept": ["κλαίει"],
+      "accept": [
+        "κλαίει"
+      ],
       "why": "κλαίω — один из глаголов группы с основой на -αι: 3 л. ед. ч. κλαίει.",
-      "words": ["κλαίω"],
-      "tags": ["verbs", "present", "irregular"]
+      "words": [
+        "κλαίω"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular"
+      ]
     },
     {
       "id": "a1-08-0008",
       "type": "choice",
       "prompt": "Γιατί ___;",
-      "options": ["κλαις", "κλαίεις", "κλαίει", "κλαίμε"],
+      "options": [
+        "κλαις",
+        "κλαίεις",
+        "κλαίει",
+        "κλαίμε"
+      ],
       "answer": "κλαις",
       "why": "«Почему ты плачешь?» — κλαις: односложная форма без ударения, окончание -ις.",
-      "words": ["κλαίω"],
-      "tags": ["verbs", "present", "irregular", "questions"]
+      "words": [
+        "κλαίω"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "questions"
+      ]
     },
     {
       "id": "a1-08-0009",
       "type": "choice",
       "prompt": "Η φωτιά ___.",
-      "options": ["καίει", "καίνε", "καίω", "καις"],
+      "options": [
+        "καίει",
+        "καίνε",
+        "καίω",
+        "καις"
+      ],
       "answer": "καίει",
       "why": "«Огонь горит»: подлежащее ед. ч. — καίει; форма καίνε — для «они».",
-      "words": ["καίω", "φωτιά"],
-      "tags": ["verbs", "present", "irregular"]
+      "words": [
+        "καίω",
+        "φωτιά"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular"
+      ]
     },
     {
       "id": "a1-08-0010",
       "type": "choice",
       "prompt": "Ποιος ___ γι' αυτό;",
-      "options": ["φταίει", "φταίνε", "φταίω", "φταις"],
+      "options": [
+        "φταίει",
+        "φταίνε",
+        "φταίω",
+        "φταις"
+      ],
       "answer": "φταίει",
       "why": "«Кто в этом виноват?» — φταίει (3 л. ед. ч.); φταίνε — 3 л. мн. ч.",
-      "words": ["φταίω"],
-      "tags": ["verbs", "present", "irregular", "questions"]
+      "words": [
+        "φταίω"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "questions"
+      ]
     },
     {
       "id": "a1-08-0011",
       "type": "cloze",
       "prompt": "Εσείς ___ στη θάλασσα; (πάω, 2 л. мн. ч.)",
       "answer": "πάτε",
-      "accept": ["πάτε"],
+      "accept": [
+        "πάτε"
+      ],
       "why": "Для «вы» — πάτε, стандартное окончание -τε у глагола πάω.",
-      "words": ["πάω", "θάλασσα"],
-      "tags": ["verbs", "present", "irregular", "pronouns"]
+      "words": [
+        "πάω",
+        "θάλασσα"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "pronouns"
+      ]
     },
     {
       "id": "a1-08-0012",
       "type": "inflect",
       "prompt": "τρώω → 1 л. мн. ч. (εμείς):",
       "answer": "τρώμε",
-      "accept": ["τρώμε"],
+      "accept": [
+        "τρώμε"
+      ],
       "why": "Для «мы» — τρώμε: окончание -με, как в λέμε и πάμε.",
-      "words": ["τρώω"],
-      "tags": ["verbs", "present", "irregular", "pronouns"]
+      "words": [
+        "τρώω"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "pronouns"
+      ]
     },
     {
       "id": "a1-08-0013",
       "type": "choice",
       "prompt": "Τι ___ ο φίλος μου;",
-      "options": ["λέει", "λένε", "λες", "λέμε"],
+      "options": [
+        "λέει",
+        "λένε",
+        "λες",
+        "λέμε"
+      ],
       "answer": "λέει",
       "why": "«Что говорит мой друг?» — λέει (3 л. ед. ч.); λένε — для «они».",
-      "words": ["λέω", "φίλος"],
-      "tags": ["verbs", "present", "irregular", "questions"]
+      "words": [
+        "λέω",
+        "φίλος"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "questions"
+      ]
     },
     {
       "id": "a1-08-0014",
       "type": "cloze",
-      "prompt": "Δεν ___ εγώ! (φταίω)",
+      "prompt": "Δεν ___ εγώ! (не я виноват; глагол φταίω)",
       "answer": "φταίω",
-      "accept": ["φταίω"],
+      "accept": [
+        "φταίω"
+      ],
       "why": "«Это не я виноват!» — φταίω (1 л. ед. ч.): окончание -ω, как у большинства глаголов.",
-      "words": ["φταίω"],
-      "tags": ["verbs", "present", "irregular", "negation"]
+      "words": [
+        "φταίω"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "negation"
+      ]
     },
     {
       "id": "a1-08-0015",
       "type": "inflect",
       "prompt": "πάω → 3 л. мн. ч. (αυτοί):",
       "answer": "πάνε",
-      "accept": ["πάνε"],
+      "accept": [
+        "πάνε"
+      ],
       "why": "Для «они» — πάνε (разговорная форма без -ουν): таблица A1/08 даёт именно её.",
-      "words": ["πάω"],
-      "tags": ["verbs", "present", "irregular", "pronouns"]
+      "words": [
+        "πάω"
+      ],
+      "tags": [
+        "verbs",
+        "present",
+        "irregular",
+        "pronouns"
+      ]
     }
   ]
 }

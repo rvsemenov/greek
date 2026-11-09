@@ -100,6 +100,8 @@ def check_item(item, where, expected_prefix, rule_level, dictionary, errors, war
         errors.append(f"{where}: пустой answer")
     if typ == "cloze" and "___" not in prompt:
         errors.append(f"{where}: cloze без пропуска ___ в prompt")
+    if typ in ("cloze", "inflect") and prompt and not CYRILLIC.search(prompt):
+        warnings.append(f"{where}: нет русской подсказки в prompt (см. prompts/new-test.md)")
 
     options = item.get("options")
     if typ in NEEDS_OPTIONS:
